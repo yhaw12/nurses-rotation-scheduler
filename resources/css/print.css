@@ -1,0 +1,7 @@
+@media print {
+    body * { visibility: hidden; }
+    #schedule-table, #schedule-table * { visibility: visible; }
+    #schedule-table { width: 100% !important; }
+    @page { size: landscape; }
+    button { display: none; }
+}
