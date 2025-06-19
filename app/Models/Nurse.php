@@ -18,7 +18,7 @@ class Nurse extends Model
 
     public function rosterUnits()
     {
-        return $this->hasMany(RosterUnit::class);
+        // return $this->hasMany(RosterUnit::class);
     }
 
     public function rosters()

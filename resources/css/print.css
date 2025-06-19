@@ -1,7 +1,19 @@
 @media print {
-    body * { visibility: hidden; }
-    #schedule-table, #schedule-table * { visibility: visible; }
-    #schedule-table { width: 100% !important; }
-    @page { size: landscape; }
-    button { display: none; }
+    body {
+        margin: 0;
+        font-size: 12pt;
+    }
+    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
+        display: none;
+    }
+    main {
+        width: 100%;
+        padding: 0;
+    }
+    .container {
+        max-width: none;
+    }
+    @page {
+        size: landscape;
+    }
 }

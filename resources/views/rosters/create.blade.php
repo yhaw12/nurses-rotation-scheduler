@@ -1,33 +1,88 @@
 @extends('layouts.app')
+
 @section('content')
-<div class="container mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Create Roster</h1>
-    <form action="{{ route('rosters.store') }}" method="POST" class="space-y-4">
-        @csrf
-        <div>
-            <label for="discipline_id" class="block text-sm font-medium text-gray-700">Discipline</label>
-            <select id="discipline_id" name="discipline_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
-                @foreach ($disciplines as $discipline)
-                    <option value="{{ $discipline->id }}">{{ $discipline->name }}</option>
-                @endforeach
-            </select>
-            @error('discipline_id') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-            <input type="date" id="start_date" name="start_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
-            @error('start_date') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label for="nurses" class="block text-sm font-medium text-gray-700">Nurse Names (one per line)</label>
-            <textarea id="nurses" name="nurses" rows="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Enter nurse names, one per line" required></textarea>
-            @error('nurses') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
-        </div>
-        <div class="flex items-center">
-            <input type="checkbox" id="reshuffle" name="reshuffle" class="h-4 w-4 text-indigo-600 border-gray-300 rounded">
-            <label for="reshuffle" class="ml-2 text-sm text-gray-600">Reshuffle Units</label>
-        </div>
-        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Create Roster</button>
-    </form>
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">Create Roster for {{ ucwords(str_replace('-', ' ', $discipline)) }}</h1>
+
+        <form action="{{ route('rosters.store') }}" method="POST" id="rosterForm" class="space-y-6">
+            @csrf
+            <input type="hidden" name="discipline" value="{{ $discipline }}">
+            <input type="hidden" name="student_names" id="student_names_hidden">
+
+            <!-- Student Names -->
+            <div>
+                <label for="student_name_input" class="block text-sm font-medium text-gray-700">Student Names</label>
+                <input type="text" name="student_name_input" id="student_name_input" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Type a student name and press Enter">
+                <div id="student_list" class="mt-2 space-y-2"></div>
+                @error('student_names')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Start Date -->
+            <div>
+                <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
+                <input type="date" name="start_date" id="start_date" value="{{ date('Y-m-d') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                @error('start_date')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- End Date -->
+            <div>
+                <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
+                <input type="date" name="end_date" id="end_date" value="{{ date('Y-m-d', strtotime('+1 year')) }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                @error('end_date')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Schedule Button -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition duration-200 font-semibold">
+                    Schedule
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('student_name_input');
+        const list = document.getElementById('student_list');
+        const hiddenInput = document.getElementById('student_names_hidden');
+
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && input.value.trim() !== '') {
+                e.preventDefault();
+                const name = input.value.trim();
+                addStudentName(name);
+                input.value = '';
+            }
+        });
+
+        function addStudentName(name) {
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between bg-gray-100 p-2 rounded';
+            div.innerHTML = `
+                <span>${name}</span>
+                <button type="button" class="ml-2 text-red-500 hover:text-red-700" onclick="removeStudentName(this, '${name}')">×</button>
+            `;
+            list.appendChild(div);
+
+            // Update hidden input with all names
+            const names = Array.from(list.getElementsByTagName('span')).map(span => span.textContent);
+            hiddenInput.value = names.join('\n');
+        }
+
+        window.removeStudentName = function (button, name) {
+            const div = button.parentElement;
+            div.remove();
+            const names = Array.from(list.getElementsByTagName('span')).map(span => span.textContent);
+            hiddenInput.value = names.join('\n');
+        };
+    });
+</script>
 @endsection

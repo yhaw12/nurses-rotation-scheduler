@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('disciplines', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
     $table->id();
     $table->string('name');
+    $table->foreignId('discipline_id')->constrained()->onDelete('cascade');
     $table->timestamps();
-    });
+   });
     }
 
     /**
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('disciplines');
+        Schema::dropIfExists('units');
     }
 };

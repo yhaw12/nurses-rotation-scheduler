@@ -2,143 +2,53 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8 space-y-12 bg-gray-100 dark:bg-[#0a0a23] dark:text-white">
-    <!-- Date Filter -->
+    <h1 class="text-3xl font-bold text-center text-gray-800 dark:text-gray-100">Roster System Dashboard</h1>
     
+    <!-- Nurse Discipline Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- RGN Card -->
+        <a href="{{ route('rosters.create.discipline', 'rgn') }}" class="block bg-white/60 dark:bg-gray-800/60 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-200">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">RGN</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Registered General Nurses</p>
+            </div>
+        </a>
 
-    <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
-    <p>Welcome, {{ Auth::user()->name }}!</p>
-    <div class="space-y-4">
-        <a href="{{ route('rosters.create') }}" class="block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-max">Create New Roster</a>
-        @if (Auth::user()->is_admin)
-            <a href="{{ route('disciplines.index') }}" class="block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 w-max">Manage Disciplines</a>
-        @endif
+        <!-- Midwives Card -->
+        <a href="{{ route('rosters.create.discipline', 'midwives') }}" class="block bg-white/60 dark:bg-gray-800/60 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-200">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Midwives</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Midwives</p>
+            </div>
+        </a>
+
+        <!-- Public Health Nurses Card -->
+        <a href="{{ route('rosters.create.discipline', 'public-health-nurses') }}" class="block bg-white/60 dark:bg-gray-800/60 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-200">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Public Health Nurses</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Public Health Nurses</p>
+            </div>
+        </a>
+
+        <!-- Psychiatric Nurses Card -->
+        <a href="{{ route('rosters.create.discipline', 'psychiatric-nurses') }}" class="block bg-white/60 dark:bg-gray-800/60 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-50 dark:hover:bg-gray-700 transition duration-200">
+            <div class="flex flex-col items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Psychiatric Nurses</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Psychiatric Nurses</p>
+            </div>
+        </a>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    let eggChart, feedChart, salesChart;
-
-    function updateEggChart() {
-        const ctx = document.getElementById('eggTrend').getContext('2d');
-        if (eggChart) eggChart.destroy();
-        eggChart = new Chart(ctx, {
-            type: document.getElementById('eggChartType').value,
-            data: {
-                labels: @json($eggTrend->pluck('date')),
-                datasets: [{ label: 'Egg Crates', data: @json($eggTrend->pluck('value')), fill: false, borderColor: '#10b981', backgroundColor: '#10b981' }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2,
-                plugins: { title: { display: true, text: 'Egg Production Trend' } }
-            }
-        });
-    }
-
-    function updateFeedChart() {
-        const ctx = document.getElementById('feedTrend').getContext('2d');
-        if (feedChart) feedChart.destroy();
-        feedChart = new Chart(ctx, {
-            type: document.getElementById('feedChartType').value,
-            data: {
-                labels: @json($feedTrend->pluck('date')),
-                datasets: [{ label: 'Feed (kg)', data: @json($feedTrend->pluck('value')), fill: false, borderColor: '#f97316', backgroundColor: '#f97316' }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2,
-                plugins: { title: { display: true, text: 'Feed Consumption Trend' } }
-            }
-        });
-    }
-
-    function updateSalesChart() {
-        const ctx = document.getElementById('salesTrend').getContext('2d');
-        if (salesChart) salesChart.destroy();
-        salesChart = new Chart(ctx, {
-            type: document.getElementById('salesChartType').value,
-            data: {
-                labels: @json($salesTrend->pluck('date')),
-                datasets: [{ label: 'Sales ($)', data: @json($salesTrend->pluck('value')), fill: false, borderColor: '#3b82f6', backgroundColor: '#3b82f6' }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                aspectRatio: 2,
-                plugins: { title: { display: true, text: 'Sales Trend' } }
-            }
-        });
-    }
-
-    // Initial draws
-    @if (isset($eggTrend) && $eggTrend->isNotEmpty())
-        updateEggChart();
-    @else
-        document.getElementById('eggTrend').parentElement.insertAdjacentHTML('beforeend', '<p class="text-gray-600 dark:text-gray-400 text-center py-4">No egg data available.</p>');
-    @endif
-
-    @if (isset($feedTrend) && $feedTrend->isNotEmpty())
-        updateFeedChart();
-    @else
-        document.getElementById('feedTrend').parentElement.insertAdjacentHTML('beforeend', '<p class="text-gray-600 dark:text-gray-400 text-center py-4">No feed data available.</p>');
-    @endif
-
-    @if (isset($salesTrend) && $salesTrend->isNotEmpty())
-        updateSalesChart();
-    @else
-        document.getElementById('salesTrend').parentElement.insertAdjacentHTML('beforeend', '<p class="text-gray-600 dark:text-gray-400 text-center py-4">No sales data available.</p>');
-    @endif
-
-    // Dismiss All Alerts
-    document.getElementById('dismiss-all-alerts')?.addEventListener('click', function() {
-        const section = document.getElementById('alerts-section');
-        const errorDiv = document.getElementById('alert-error');
-        if (section && errorDiv) {
-            section.style.display = 'none'; // Hide the alerts section
-            // Send AJAX request to mark all alerts as read
-            fetch('{{ route('alerts.dismiss-all') }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}',
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            })
-            .then(response => {
-                console.log('Response Status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.text().then(text => {
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('Invalid JSON:', text);
-                        throw new Error('Invalid JSON response');
-                    }
-                });
-            })
-            .then(data => {
-                console.log('Response Data:', data);
-                if (data.success) {
-                    console.log('All alerts marked as read successfully.');
-                } else {
-                    console.error('Failed to dismiss alerts:', data.message);
-                    section.style.display = 'block'; // Re-show section
-                    errorDiv.classList.remove('hidden');
-                    errorDiv.textContent = data.message || 'Failed to dismiss alerts.';
-                }
-            })
-            .catch(error => {
-                console.error('Fetch Error:', error.message);
-                section.style.display = 'block'; // Re-show section
-                errorDiv.classList.remove('hidden');
-                errorDiv.textContent = 'An error occurred while dismissing alerts: ' + error.message;
-            });
-        }
-    });
-</script>
 @endsection

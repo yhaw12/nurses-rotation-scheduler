@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -10,11 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
     public function showLoginForm()
     {
         return view('auth.login');
@@ -33,7 +28,7 @@ class UserController extends Controller
             /** @var User $user */
             $user = Auth::user();
 
-            session()->flash('status', $user->isAdmin() ? 'Logged in as Admin.' : 'Login successful.');
+            session()->flash('status', $user->is_admin ? 'Logged in as Admin.' : 'Login successful.');
 
             return redirect()->intended(route('dashboard'));
         }
@@ -45,7 +40,6 @@ class UserController extends Controller
 
     public function logout(Request $request)
     {
-
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -70,11 +64,10 @@ class UserController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'is_admin' => false, 
+            'is_admin' => false,
         ]);
 
         Auth::login($user);
-
 
         return redirect()->route('dashboard');
     }

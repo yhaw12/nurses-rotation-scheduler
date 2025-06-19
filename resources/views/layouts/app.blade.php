@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Poultry Tracker</title>
+    <title>Roster System</title>
     <link rel="stylesheet" href="{{ asset('css/print.css') }}" media="print">
-    @vite('resources/css/app.css')
+    {{-- @vite('resources/css/app.css') --}}
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         @media (max-width: 768px) {
             .sidebar.expanded {
@@ -46,7 +47,8 @@
 
                             <!-- Navigation links -->
                             @if(auth()->user()->is_admin)
-                                <a href="{{ route('income.index') }}" class="hidden md:block text-blue-600 hover:text-blue-800 font-semibold">Income</a>
+                                <!-- <a href="{{ route('income.index') }}" class="hidden md:block text-blue-600 hover:text-blue-800 font-semibold">Income</a> -->
+                                <a href="{{ route('disciplines.index') }}" class="hidden md:block text-blue-600 hover:text-blue-800 font-semibold">Disciplines</a>
                             @endif
 
                             <div class="flex-1"></div>
