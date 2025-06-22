@@ -9,111 +9,79 @@ use Illuminate\Http\Request;
 
 class RosterController extends Controller
 {
-    public function index()
-    {
-        $rosters = Roster::with('discipline')->get();
-        return view('rosters.index', compact('rosters'));
-    }
-
     public function create($discipline)
     {
-        return view('rosters.create', ['discipline' => $discipline]);
+        $display = match ($discipline) {
+            'rgn'                   => 'Registered General Nurses (RGN)',
+            'midwives'             => 'Midwives',
+            'public-health-nurses' => 'Public Health Nurses',
+            default                => ucwords(str_replace('-', ' ', $discipline)),
+        };
+
+        return view('rosters.create', [
+            'discipline'         => $discipline,
+            'displayDiscipline'  => $display,
+        ]);
     }
 
     public function store(Request $request)
-{
-    // Validate the input
-    $validated = $request->validate([
-        'discipline' => 'required|string',
-        'student_names' => 'required|string',
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after_or_equal:start_date',
-    ]);
-
-    // Find the discipline
-    $discipline = Discipline::where('name', ucwords(str_replace('-', ' ', $validated['discipline'])))->firstOrFail();
-    $units = $discipline->units()->with('subunits')->get();
-
-    // Process student names
-    $studentNames = array_filter(array_map('trim', explode("\n", $validated['student_names'])));
-    if (empty($studentNames)) {
-        return back()->withErrors(['student_names' => 'At least one student name is required.']);
-    }
-
-    // Create a single roster for all students
-    $roster = Roster::create([
-        'discipline_id' => $discipline->id,
-        'start_date' => $validated['start_date'],
-        'end_date' => $validated['end_date'],
-        'created_by' => auth()->id(),
-    ]);
-
-    // Shuffle units to assign students randomly
-    $shuffledUnits = $units->shuffle();
-    $numUnits = $units->count();
-
-    // Assign each student to a unit and its subunits
-    foreach ($studentNames as $index => $student) {
-        $unit = $shuffledUnits[$index % $numUnits]; // Cycle through units if more students than units
-        $subunits = $unit->subunits;
-
-        $currentDate = $validated['start_date'];
-        foreach ($subunits as $subunit) {
-            $endDate = date('Y-m-d', strtotime($currentDate . " + {$subunit->duration_weeks} weeks - 1 day"));
-            RosterAssignment::create([
-                'roster_id' => $roster->id,
-                'student_name' => $student,
-                'unit_id' => $unit->id,
-                'subunit_id' => $subunit->id,
-                'start_date' => $currentDate,
-                'end_date' => $endDate,
-            ]);
-            $currentDate = date('Y-m-d', strtotime($endDate . ' + 1 day'));
-        }
-    }
-
-    // Redirect to the show page for the newly created roster
-    return redirect()->route('rosters.show', $roster)->with('status', 'Roster created successfully.');
-}
-    public function show(Roster $roster)
     {
-        $assignments = $roster->assignments()->with('unit', 'subunit')->get();
-        return view('rosters.show', compact('roster', 'assignments'));
-    }
+        $data = $request->validate([
+            'discipline'    => 'required|string',
+            'student_names' => 'required|string',
+            'start_date'    => 'required|date',
+            'end_date'      => 'required|date|after_or_equal:start_date',
+        ]);
 
-    public function reshuffle(Roster $roster)
-    {
-        $units = $roster->discipline->units()->with('subunits')->get();
-        $studentNames = $roster->assignments()->pluck('student_name')->unique()->toArray();
-        $numStudents = count($studentNames);
-        $numUnits = $units->count();
+        // Normalize to the DB name
+        $map = [
+            'rgn'                   => 'Registered General Nurses (RGN)',
+            'midwives'             => 'Midwives',
+            'public-health-nurses' => 'Public Health Nurses',
+        ];
+        $name = $map[$data['discipline']] ?? ucwords(str_replace('-', ' ', $data['discipline']));
 
-        if ($numStudents > $numUnits) {
-            return back()->withErrors(['message' => 'Number of students cannot exceed the number of units (' . $numUnits . ').']);
-        }
+        $discipline = Discipline::where('name', $name)
+            ->with('units.subunits')
+            ->firstOrFail();
 
-        $roster->assignments()->delete();
-        $shuffledUnits = $units->shuffle();
+        $students = collect(explode("\n", $data['student_names']))
+            ->map(fn($n) => trim($n))
+            ->filter()
+            ->values();
 
-        foreach ($studentNames as $index => $student) {
-            $unit = $shuffledUnits[$index % $numUnits];
-            $subunits = $unit->subunits;
+        $roster = Roster::create([
+            'discipline_id' => $discipline->id,
+            'start_date'    => $data['start_date'],
+            'end_date'      => $data['end_date'],
+            'created_by'    => auth()->id(),
+        ]);
 
-            $currentDate = $roster->start_date;
-            foreach ($subunits as $subunit) {
-                $endDate = date('Y-m-d', strtotime($currentDate . " + {$subunit->duration_weeks} weeks"));
-                RosterAssignment::create([
-                    'roster_id' => $roster->id,
-                    'student_name' => $student,
-                    'unit_id' => $unit->id,
-                    'subunit_id' => $subunit->id,
-                    'start_date' => $currentDate,
-                    'end_date' => $endDate,
-                ]);
-                $currentDate = $endDate;
+        foreach ($students as $student) {
+            $cursor = $data['start_date'];
+            foreach ($discipline->units as $unit) {
+                foreach ($unit->subunits as $sub) {
+                    $end = date('Y-m-d', strtotime("$cursor +{$sub->duration_weeks} weeks -1 day"));
+                    RosterAssignment::create([
+                        'roster_id'    => $roster->id,
+                        'student_name' => $student,
+                        'unit_id'      => $unit->id,
+                        'subunit_id'   => $sub->id,
+                        'start_date'   => $cursor,
+                        'end_date'     => $end,
+                    ]);
+                    $cursor = date('Y-m-d', strtotime("$end +1 day"));
+                    if ($cursor > $data['end_date']) break 3;
+                }
             }
         }
 
-        return redirect()->route('rosters.show', $roster)->with('status', 'Roster reshuffled successfully.');
+        return redirect()->route('rosters.show', $roster);
+    }
+
+    public function show(Roster $roster)
+    {
+        $assignments = $roster->assignments()->with('unit','subunit')->get();
+        return view('rosters.show', compact('roster','assignments'));
     }
 }

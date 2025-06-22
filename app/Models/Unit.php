@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    protected $fillable = ['name', 'discipline_id', 'duration_weeks', 'sort_order'];
+    protected $fillable = ['name', 'discipline_id', 'sort_order'];
 
     public function discipline()
     {

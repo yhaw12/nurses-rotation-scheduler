@@ -12,6 +12,7 @@ class UserController extends Controller
 {
     public function showLoginForm()
     {
+        // dd('Login route hit');
         return view('auth.login');
     }
 

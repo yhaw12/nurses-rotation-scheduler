@@ -12,130 +12,178 @@ class DisciplineSeeder extends Seeder
     public function run()
     {
         // Seed Midwives Discipline
-        $midwives = Discipline::create(['name' => 'Midwives']);
+        $midwives = Discipline::firstOrCreate(['name' => 'Midwives']);
 
-        // Public Health Unit (Midwives)
-        $midwivesPublicHealth = Unit::create(['name' => 'Public Health', 'discipline_id' => $midwives->id]);
-        Subunit::create(['name' => 'CWC', 'duration_weeks' => 2, 'unit_id' => $midwivesPublicHealth->id]);
-        Subunit::create(['name' => 'Nutrition', 'duration_weeks' => 2, 'unit_id' => $midwivesPublicHealth->id]);
-        Subunit::create(['name' => 'CHPS', 'duration_weeks' => 2, 'unit_id' => $midwivesPublicHealth->id]);
-        Subunit::create(['name' => 'Home Visit', 'duration_weeks' => 2, 'unit_id' => $midwivesPublicHealth->id]);
-        Subunit::create(['name' => 'Family Planning', 'duration_weeks' => 3, 'unit_id' => $midwivesPublicHealth->id]);
+        $midwivesPublicHealth = Unit::firstOrCreate([
+            'name' => 'Public Health',
+            'discipline_id' => $midwives->id,
+            'sort_order' => 1,
+        ]);
+        Subunit::firstOrCreate(['name' => 'CWC', 'unit_id' => $midwivesPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Nutrition', 'unit_id' => $midwivesPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'CHPS', 'unit_id' => $midwivesPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Home Visit', 'unit_id' => $midwivesPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Family Planning', 'unit_id' => $midwivesPublicHealth->id, 'duration_weeks' => 3]);
 
-        // Surgical Nursing Unit (Midwives)
-        $midwivesSurgicalNursing = Unit::create(['name' => 'Surgical Nursing', 'discipline_id' => $midwives->id]);
-        Subunit::create(['name' => 'Eye', 'duration_weeks' => 1, 'unit_id' => $midwivesSurgicalNursing->id]);
-        Subunit::create(['name' => 'ENT', 'duration_weeks' => 1, 'unit_id' => $midwivesSurgicalNursing->id]);
-        Subunit::create(['name' => 'MCH', 'duration_weeks' => 2, 'unit_id' => $midwivesSurgicalNursing->id]);
+        $midwivesSurgicalNursing = Unit::firstOrCreate([
+            'name' => 'Surgical Nursing',
+            'discipline_id' => $midwives->id,
+            'sort_order' => 2,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Eye', 'unit_id' => $midwivesSurgicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'ENT', 'unit_id' => $midwivesSurgicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'MCH', 'unit_id' => $midwivesSurgicalNursing->id, 'duration_weeks' => 2]);
 
-        // Maternity Unit (Midwives)
-        $midwivesMaternity = Unit::create(['name' => 'Maternity', 'discipline_id' => $midwives->id]);
-        Subunit::create(['name' => 'ANC', 'duration_weeks' => 5, 'unit_id' => $midwivesMaternity->id]);
-        Subunit::create(['name' => 'Labour/Delivery & Postnatal Care', 'duration_weeks' => 17, 'unit_id' => $midwivesMaternity->id]);
-        Subunit::create(['name' => 'Neonatal Care (KPC)', 'duration_weeks' => 5, 'unit_id' => $midwivesMaternity->id]);
-        Subunit::create(['name' => 'Gynae (MCH)', 'duration_weeks' => 1, 'unit_id' => $midwivesMaternity->id]);
+        $midwivesMaternity = Unit::firstOrCreate([
+            'name' => 'Maternity',
+            'discipline_id' => $midwives->id,
+            'sort_order' => 3,
+        ]);
+        Subunit::firstOrCreate(['name' => 'ANC', 'unit_id' => $midwivesMaternity->id, 'duration_weeks' => 5]);
+        Subunit::firstOrCreate(['name' => 'Labour/Delivery & Postnatal Care', 'unit_id' => $midwivesMaternity->id, 'duration_weeks' => 17]);
+        Subunit::firstOrCreate(['name' => 'Neonatal Care (KPC)', 'unit_id' => $midwivesMaternity->id, 'duration_weeks' => 5]);
+        Subunit::firstOrCreate(['name' => 'Gynae (MCH)', 'unit_id' => $midwivesMaternity->id, 'duration_weeks' => 1]);
 
-        // Medical Nursing Unit (Midwives)
-        $midwivesMedicalNursing = Unit::create(['name' => 'Medical Nursing', 'discipline_id' => $midwives->id]);
-        Subunit::create(['name' => 'Male Ward', 'duration_weeks' => 2, 'unit_id' => $midwivesMedicalNursing->id]);
-        Subunit::create(['name' => 'Female/Kids', 'duration_weeks' => 1, 'unit_id' => $midwivesMedicalNursing->id]);
-        Subunit::create(['name' => 'Emergency', 'duration_weeks' => 1, 'unit_id' => $midwivesMedicalNursing->id]);
-        Subunit::create(['name' => 'OPD', 'duration_weeks' => 1, 'unit_id' => $midwivesMedicalNursing->id]);
+        $midwivesMedicalNursing = Unit::firstOrCreate([
+            'name' => 'Medical Nursing',
+            'discipline_id' => $midwives->id,
+            'sort_order' => 4,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Male Ward', 'unit_id' => $midwivesMedicalNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Female/Kids', 'unit_id' => $midwivesMedicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Emergency', 'unit_id' => $midwivesMedicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'OPD', 'unit_id' => $midwivesMedicalNursing->id, 'duration_weeks' => 1]);
 
-        // Psychiatry (KPC) Unit (Midwives)
-        $midwivesPsychiatry = Unit::create(['name' => 'Psychiatry (KPC)', 'discipline_id' => $midwives->id]);
-        Subunit::create(['name' => 'Comm. Psychiatry', 'duration_weeks' => 4, 'unit_id' => $midwivesPsychiatry->id]);
-
-
-        
+        $midwivesPsychiatry = Unit::firstOrCreate([
+            'name' => 'Psychiatry (KPC)',
+            'discipline_id' => $midwives->id,
+            'sort_order' => 5,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Comm. Psychiatry', 'unit_id' => $midwivesPsychiatry->id, 'duration_weeks' => 4]);
 
         // Seed RGN Discipline
-        $rgn = Discipline::create(['name' => 'Registered General Nurses (RGN)']);
+        $rgn = Discipline::firstOrCreate(['name' => 'Registered General Nurses (RGN)']);
 
-        // Medical Nursing Unit (RGN)
-        $rgnMedicalNursing = Unit::create(['name' => 'Medical Nursing', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'OPD', 'duration_weeks' => 12, 'unit_id' => $rgnMedicalNursing->id]);
-        Subunit::create(['name' => 'Female Ward / Paediatric Ward', 'duration_weeks' => 12, 'unit_id' => $rgnMedicalNursing->id]);
-        Subunit::create(['name' => 'Male Ward', 'duration_weeks' => 12, 'unit_id' => $rgnMedicalNursing->id]);
-        Subunit::create(['name' => 'Emergency', 'duration_weeks' => 12, 'unit_id' => $rgnMedicalNursing->id]);
+        $rgnMedicalNursing = Unit::firstOrCreate([
+            'name' => 'Medical Nursing',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 1,
+        ]);
+        Subunit::firstOrCreate(['name' => 'OPD', 'unit_id' => $rgnMedicalNursing->id, 'duration_weeks' => 12]);
+        Subunit::firstOrCreate(['name' => 'Female Ward / Paediatric Ward', 'unit_id' => $rgnMedicalNursing->id, 'duration_weeks' => 12]);
+        Subunit::firstOrCreate(['name' => 'Male Ward', 'unit_id' => $rgnMedicalNursing->id, 'duration_weeks' => 12]);
+        Subunit::firstOrCreate(['name' => 'Emergency', 'unit_id' => $rgnMedicalNursing->id, 'duration_weeks' => 12]);
 
-        // Surgical Nursing Unit (RGN)
-        $rgnSurgicalNursing = Unit::create(['name' => 'Surgical Nursing', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'MCH', 'duration_weeks' => 5, 'unit_id' => $rgnSurgicalNursing->id]);
-        Subunit::create(['name' => 'MCH (continued)', 'duration_weeks' => 5, 'unit_id' => $rgnSurgicalNursing->id]);
+        $rgnSurgicalNursing = Unit::firstOrCreate([
+            'name' => 'Surgical Nursing',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 2,
+        ]);
+        Subunit::firstOrCreate(['name' => 'MCH', 'unit_id' => $rgnSurgicalNursing->id, 'duration_weeks' => 5]);
+        Subunit::firstOrCreate(['name' => 'MCH (continued)', 'unit_id' => $rgnSurgicalNursing->id, 'duration_weeks' => 5]);
 
-        // Obstetrics Nursing Unit (RGN)
-        $rgnObstetricsNursing = Unit::create(['name' => 'Obstetrics Nursing', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'ANC (Antenatal Care)', 'duration_weeks' => 4, 'unit_id' => $rgnObstetricsNursing->id]);
+        $rgnObstetricsNursing = Unit::firstOrCreate([
+            'name' => 'Obstetrics Nursing',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 3,
+        ]);
+        Subunit::firstOrCreate(['name' => 'ANC (Antenatal Care)', 'unit_id' => $rgnObstetricsNursing->id, 'duration_weeks' => 4]);
 
-        // Public Health Unit (RGN)
-        $rgnPublicHealth = Unit::create(['name' => 'Public Health', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'Health Promotion/Education', 'duration_weeks' => 2, 'unit_id' => $rgnPublicHealth->id]);
-        Subunit::create(['name' => 'Home Visit', 'duration_weeks' => 2, 'unit_id' => $rgnPublicHealth->id]);
-        Subunit::create(['name' => 'Family Planning', 'duration_weeks' => 2, 'unit_id' => $rgnPublicHealth->id]);
-        Subunit::create(['name' => 'School Health', 'duration_weeks' => 2, 'unit_id' => $rgnPublicHealth->id]);
-        Subunit::create(['name' => 'CWC (Child Welfare Clinic)', 'duration_weeks' => 2, 'unit_id' => $rgnPublicHealth->id]);
+        $rgnPublicHealth = Unit::firstOrCreate([
+            'name' => 'Public Health',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 4,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Health Promotion/Education', 'unit_id' => $rgnPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Home Visit', 'unit_id' => $rgnPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Family Planning', 'unit_id' => $rgnPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'School Health', 'unit_id' => $rgnPublicHealth->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'CWC (Child Welfare Clinic)', 'unit_id' => $rgnPublicHealth->id, 'duration_weeks' => 2]);
 
-        // Psychiatry Unit (RGN)
-        $rgnPsychiatry = Unit::create(['name' => 'Psychiatry', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'Community Psychiatry (KPC)', 'duration_weeks' => 3, 'unit_id' => $rgnPsychiatry->id]);
-        Subunit::create(['name' => 'Acute Ward / Chronic Ward (Outside)', 'duration_weeks' => 3, 'unit_id' => $rgnPsychiatry->id]);
-        Subunit::create(['name' => 'Same or related rotations', 'duration_weeks' => 3, 'unit_id' => $rgnPsychiatry->id]);
-        Subunit::create(['name' => 'Same or related rotations', 'duration_weeks' => 3, 'unit_id' => $rgnPsychiatry->id]);
+        $rgnPsychiatry = Unit::firstOrCreate([
+            'name' => 'Psychiatry',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 5,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Community Psychiatry (KPC)', 'unit_id' => $rgnPsychiatry->id, 'duration_weeks' => 3]);
+        Subunit::firstOrCreate(['name' => 'Acute Ward / Chronic Ward (Outside)', 'unit_id' => $rgnPsychiatry->id, 'duration_weeks' => 3]);
+        Subunit::firstOrCreate(['name' => 'Same or related rotations', 'unit_id' => $rgnPsychiatry->id, 'duration_weeks' => 3]);
+        Subunit::firstOrCreate(['name' => 'Same or related rotations', 'unit_id' => $rgnPsychiatry->id, 'duration_weeks' => 3]);
 
-        // Special Clinic Unit (RGN)
-        $rgnSpecialClinic = Unit::create(['name' => 'Special Clinic', 'discipline_id' => $rgn->id]);
-        Subunit::create(['name' => 'ENT (Ear, Nose, Throat)', 'duration_weeks' => 2, 'unit_id' => $rgnSpecialClinic->id]);
-        Subunit::create(['name' => 'Eye', 'duration_weeks' => 2, 'unit_id' => $rgnSpecialClinic->id]);
-        Subunit::create(['name' => 'HIV/ART/CT', 'duration_weeks' => 2, 'unit_id' => $rgnSpecialClinic->id]);
-        Subunit::create(['name' => 'Diabetic / Hypertensive', 'duration_weeks' => 2, 'unit_id' => $rgnSpecialClinic->id]);
+        $rgnSpecialClinic = Unit::firstOrCreate([
+            'name' => 'Special Clinic',
+            'discipline_id' => $rgn->id,
+            'sort_order' => 6,
+        ]);
+        Subunit::firstOrCreate(['name' => 'ENT (Ear, Nose, Throat)', 'unit_id' => $rgnSpecialClinic->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Eye', 'unit_id' => $rgnSpecialClinic->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'HIV/ART/CT', 'unit_id' => $rgnSpecialClinic->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Diabetic / Hypertensive', 'unit_id' => $rgnSpecialClinic->id, 'duration_weeks' => 2]);
 
         // Seed Public Health Nurses Discipline
-        $publicHealthNurses = Discipline::create(['name' => 'Public Health Nurses']);
+        $publicHealthNurses = Discipline::firstOrCreate(['name' => 'Public Health Nurses']);
 
-        // Public Health Nursing Unit (Public Health Nurses)
-        $phnPublicHealthNursing = Unit::create(['name' => 'Public Health Nursing', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'CHPS', 'duration_weeks' => 2, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Composite Public Health / N. P.', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'School Health', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Nutrition Promotion / Education', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Health Promotion / Education', 'duration_weeks' => 2, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Environmental Health', 'duration_weeks' => 2, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Community Rehabilitation', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Occupational Health', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Health Administration', 'duration_weeks' => 1, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'Nutrition & NCD Clinic', 'duration_weeks' => 2, 'unit_id' => $phnPublicHealthNursing->id]);
-        Subunit::create(['name' => 'TB-DOT', 'duration_weeks' => 3, 'unit_id' => $phnPublicHealthNursing->id]);
+        $phnPublicHealthNursing = Unit::firstOrCreate([
+            'name' => 'Public Health Nursing',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 1,
+        ]);
+        Subunit::firstOrCreate(['name' => 'CHPS', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Composite Public Health / N. P.', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'School Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Nutrition Promotion / Education', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Health Promotion / Education', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Environmental Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Community Rehabilitation', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Occupational Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Health Administration', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Nutrition & NCD Clinic', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'TB-DOT', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 3]);
 
-        // Medical Nursing Unit (Public Health Nurses)
-        $phnMedicalNursing = Unit::create(['name' => 'Medical Nursing', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'Male Ward', 'duration_weeks' => 2, 'unit_id' => $phnMedicalNursing->id]);
-        Subunit::create(['name' => 'Female/Kids', 'duration_weeks' => 1, 'unit_id' => $phnMedicalNursing->id]);
-        Subunit::create(['name' => 'Emergency', 'duration_weeks' => 1, 'unit_id' => $phnMedicalNursing->id]);
-        Subunit::create(['name' => 'OPD', 'duration_weeks' => 1, 'unit_id' => $phnMedicalNursing->id]);
+        $phnMedicalNursing = Unit::firstOrCreate([
+            'name' => 'Medical Nursing',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 2,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Male Ward', 'unit_id' => $phnMedicalNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Female/Kids', 'unit_id' => $phnMedicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Emergency', 'unit_id' => $phnMedicalNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'OPD', 'unit_id' => $phnMedicalNursing->id, 'duration_weeks' => 1]);
 
-        // MCH Unit (Public Health Nurses)
-        $phnMCH = Unit::create(['name' => 'MCH', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'MCH', 'duration_weeks' => 4, 'unit_id' => $phnMCH->id]);
+        $phnMCH = Unit::firstOrCreate([
+            'name' => 'MCH',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 3,
+        ]);
+        Subunit::firstOrCreate(['name' => 'MCH', 'unit_id' => $phnMCH->id, 'duration_weeks' => 4]);
 
-        // Psychiatry (KPC) Unit (Public Health Nurses)
-        $phnPsychiatry = Unit::create(['name' => 'Psychiatry (KPC)', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'Comm. Psychiatry', 'duration_weeks' => 2, 'unit_id' => $phnPsychiatry->id]);
-        Subunit::create(['name' => 'Acute Ward', 'duration_weeks' => 2, 'unit_id' => $phnPsychiatry->id]);
-        Subunit::create(['name' => 'Chronic Ward', 'duration_weeks' => 1, 'unit_id' => $phnPsychiatry->id]);
-        Subunit::create(['name' => 'OPD', 'duration_weeks' => 1, 'unit_id' => $phnPsychiatry->id]);
+        $phnPsychiatry = Unit::firstOrCreate([
+            'name' => 'Psychiatry (KPC)',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 4,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Comm. Psychiatry', 'unit_id' => $phnPsychiatry->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Acute Ward', 'unit_id' => $phnPsychiatry->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'Chronic Ward', 'unit_id' => $phnPsychiatry->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'OPD', 'unit_id' => $phnPsychiatry->id, 'duration_weeks' => 1]);
 
-        // Special Clinic Unit (Public Health Nurses)
-        $phnSpecialClinic = Unit::create(['name' => 'Special Clinic', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'Chest Clinic', 'duration_weeks' => 2, 'unit_id' => $phnSpecialClinic->id]);
-        Subunit::create(['name' => 'ENT Clinic', 'duration_weeks' => 1, 'unit_id' => $phnSpecialClinic->id]);
-        Subunit::create(['name' => 'Diabetic / Hypertensive', 'duration_weeks' => 1, 'unit_id' => $phnSpecialClinic->id]);
-        Subunit::create(['name' => 'Eye Clinic', 'duration_weeks' => 1, 'unit_id' => $phnSpecialClinic->id]);
+        $phnSpecialClinic = Unit::firstOrCreate([
+            'name' => 'Special Clinic',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 5,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Chest Clinic', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'ENT Clinic', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Diabetic / Hypertensive', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Eye Clinic', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
 
-        // Obstetric Nursing Unit (Public Health Nurses)
-        $phnObstetricNursing = Unit::create(['name' => 'Obstetric Nursing', 'discipline_id' => $publicHealthNurses->id]);
-        Subunit::create(['name' => 'Labour/Delivery & Postnatal/Neonatal', 'duration_weeks' => 7, 'unit_id' => $phnObstetricNursing->id]);
-        Subunit::create(['name' => 'Gynae (MCH)', 'duration_weeks' => 2, 'unit_id' => $phnObstetricNursing->id]);
-        Subunit::create(['name' => 'ANC', 'duration_weeks' => 2, 'unit_id' => $phnObstetricNursing->id]);
+        $phnObstetricNursing = Unit::firstOrCreate([
+            'name' => 'Obstetric Nursing',
+            'discipline_id' => $publicHealthNurses->id,
+            'sort_order' => 6,
+        ]);
+        Subunit::firstOrCreate(['name' => 'Labour/Delivery & Postnatal/Neonatal', 'unit_id' => $phnObstetricNursing->id, 'duration_weeks' => 7]);
+        Subunit::firstOrCreate(['name' => 'Gynae (MCH)', 'unit_id' => $phnObstetricNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'ANC', 'unit_id' => $phnObstetricNursing->id, 'duration_weeks' => 2]);
     }
 }
