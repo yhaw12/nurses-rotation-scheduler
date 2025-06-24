@@ -6,6 +6,9 @@
     $totalRows = $roster->discipline->units->sum(function ($unit) {
         return $unit->subunits->count();
     });
+
+    // Collect all student names from assignments and join with newline
+    $studentNames = $assignments->pluck('student_name')->unique()->implode("\n");
 @endphp
 
 <div class="container mx-auto px-2 py-6">
@@ -35,19 +38,24 @@
         </tr>
       </thead>
       <tbody>
+        @php
+            $currentDate = \Carbon\Carbon::parse($roster->start_date);
+        @endphp
         @foreach($roster->discipline->units as $unitIndex => $unit)
           @foreach($unit->subunits as $loopIndex => $sub)
             <tr>
               {{-- Render NAMES column only on the very first row of the table --}}
               @if($unitIndex === 0 && $loopIndex === 0)
-                <td class="border p-1" rowspan="{{ $totalRows }}"> </td>
+                <td class="border p-1 align-top" rowspan="{{ $totalRows }}">
+                  {{ $studentNames }}
+                </td>
               @endif
 
               {{-- Render other columns only on the first subunit of each unit --}}
               @if($loopIndex === 0)
                 {{-- DURATION: a single cell listing every subunit’s duration --}}
                 <td class="border p-1 align-top" rowspan="{{ $unit->subunits->count() }}">
-                  <div class="h-6"></div> <!-- Spacer to align durations below unit name -->
+                  <div class="h-6"></div>
                   <table class="w-full border-collapse">
                     <tbody>
                       @foreach($unit->subunits as $s)
@@ -62,9 +70,43 @@
                 </td>
 
                 {{-- START DATE --}}
-                <td class="border p-1" rowspan="{{ $unit->subunits->count() }}"> </td>
+                <td class="border p-1" rowspan="{{ $unit->subunits->count() }}">
+                  <table class="w-full border-collapse">
+                    <tbody>
+                      @foreach($unit->subunits as $s)
+                        <tr class="h-6">
+                          <td class="text-gray-800 align-middle">
+                            {{ $currentDate->format('d/m/Y') }}
+                          </td>
+                        </tr>
+                        @php
+                            $currentDate->addWeeks($s->duration_weeks);
+                        @endphp
+                      @endforeach
+                    </tbody>
+                  </table>
+                </td>
+
                 {{-- END DATE --}}
-                <td class="border p-1" rowspan="{{ $unit->subunits->count() }}"> </td>
+                <td class="border p-1" rowspan="{{ $unit->subunits->count() }}">
+                  <table class="w-full border-collapse">
+                    <tbody>
+                      @php
+                          $endDate = \Carbon\Carbon::parse($roster->start_date);
+                      @endphp
+                      @foreach($unit->subunits as $s)
+                        <tr class="h-6">
+                          <td class="text-gray-800 align-middle">
+                            {{ $endDate->copy()->addWeeks($s->duration_weeks - 1)->format('d/m/Y') }}
+                          </td>
+                        </tr>
+                        @php
+                            $endDate->addWeeks($s->duration_weeks);
+                        @endphp
+                      @endforeach
+                    </tbody>
+                  </table>
+                </td>
 
                 {{-- UNITS & SUBUNITS: a single cell listing every subunit’s name --}}
                 <td class="border p-1 align-top" rowspan="{{ $unit->subunits->count() }}">
@@ -87,6 +129,12 @@
               @endif
             </tr>
           @endforeach
+          @php
+              // Reset currentDate for the next unit, starting from the last end date of the previous unit
+              $currentDate = \Carbon\Carbon::parse($roster->start_date)->addWeeks(
+                  $unit->subunits->sum('duration_weeks')
+              );
+          @endphp
         @endforeach
       </tbody>
     </table>
@@ -112,6 +160,11 @@
   }
   .leading-6 {
     line-height: 1.5rem; /* Ensures unit name aligns with spacer */
+  }
+  /* Ensure text starts at the top of the NAMES cell */
+  td.align-top {
+    vertical-align: top;
+    white-space: pre-wrap; /* Preserve newlines and wrap text */
   }
 </style>
 @endpush

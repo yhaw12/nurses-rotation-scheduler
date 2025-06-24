@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class RosterController extends Controller
 {
+    /**
+     * Show the form for creating a new roster.
+     *
+     * @param string $discipline
+     * @return \Illuminate\View\View
+     */
     public function create($discipline)
     {
         $display = match ($discipline) {
@@ -24,6 +30,12 @@ class RosterController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created roster in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -39,8 +51,7 @@ class RosterController extends Controller
             'midwives'             => 'Midwives',
             'public-health-nurses' => 'Public Health Nurses',
         ];
-        $name = $map[$data['discipline']]
-              ?? ucwords(str_replace('-', ' ', $data['discipline']));
+        $name = $map[$data['discipline']] ?? ucwords(str_replace('-', ' ', $data['discipline']));
 
         $discipline = Discipline::where('name', $name)
             ->with('units.subunits')
@@ -79,7 +90,7 @@ class RosterController extends Controller
 
                     $cursor = date('Y-m-d', strtotime("$end +1 day"));
 
-                    // stop this student if we passed overall end_date
+                    // Stop this student if we passed overall end_date
                     if ($cursor > $data['end_date']) {
                         break 2;
                     }
@@ -90,23 +101,29 @@ class RosterController extends Controller
         return redirect()->route('rosters.show', $roster);
     }
 
- public function show(Roster $roster)
-{
-    $discipline = $roster->discipline()->with('units.subunits')->first();
+    /**
+     * Display the specified roster.
+     *
+     * @param \App\Models\Roster $roster
+     * @return \Illuminate\View\View
+     */
+    public function show(Roster $roster)
+    {
+        $discipline = $roster->discipline()->with('units.subunits')->first();
 
-    // flatten for row count
-    $lines = [];
-    foreach ($discipline->units as $unit) {
-        foreach ($unit->subunits as $sub) {
-            $lines[] = ['unit' => strtoupper($unit->name)];
+        // Flatten for row count (optional, can be removed if not used in view)
+        $lines = [];
+        foreach ($discipline->units as $unit) {
+            foreach ($unit->subunits as $sub) {
+                $lines[] = ['unit' => strtoupper($unit->name)];
+            }
         }
+
+        // Load assignments with related data
+        $assignments = $roster->assignments()
+            ->with(['unit', 'subunit'])
+            ->get();
+
+        return view('rosters.show', compact('roster', 'discipline', 'lines', 'assignments'));
     }
-
-    // also load assignments just for row‐count (names blank)
-    $assignments = $roster->assignments()->get();
-
-    return view('rosters.show', compact('roster','discipline','lines','assignments'));
-}
-
-
 }
