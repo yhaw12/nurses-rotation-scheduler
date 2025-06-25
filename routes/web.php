@@ -35,4 +35,5 @@ Route::middleware('auth')->group(function () {
     Route::post('rosters', [RosterController::class, 'store'])->name('rosters.store');
     Route::get('rosters/{roster}', [RosterController::class, 'show'])->name('rosters.show');
     Route::patch('rosters/{roster}/reshuffle', [RosterController::class, 'reshuffle'])->name('rosters.reshuffle');
+    Route::post('/rosters/{roster}/shuffle', [RosterController::class, 'shuffle'])->name('rosters.shuffle');
 });

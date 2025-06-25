@@ -1,3 +1,4 @@
+{{-- SIDEBAR --}}
 <nav class="flex flex-col h-full p-4">
     <div class="mb-6">
         <a href="{{ route('dashboard') }}" class="text-lg font-bold text-blue-600 hover:text-blue-800">Roster System</a>

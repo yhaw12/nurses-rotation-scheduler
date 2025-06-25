@@ -1,19 +1,13 @@
 @media print {
-    body {
-        margin: 0;
-        font-size: 12pt;
-    }
-    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
-        display: none;
-    }
-    main {
-        width: 100%;
-        padding: 0;
-    }
-    .container {
-        max-width: none;
-    }
-    @page {
-        size: landscape;
-    }
+    body { margin: 0; font-size: 12pt; overflow: hidden !important; }
+    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle { display: none !important; }
+    main { width: 100%; padding: 0; overflow: hidden !important; }
+    .container { max-width: none; overflow: hidden !important; }
+    @page { size: A4 landscape; margin: 0.5cm; }
+    .print-content { display: block !important; overflow: hidden !important; }
+    .print-content table { width: 100% !important; border-collapse: collapse !important; overflow: hidden !important; }
+    .print-content th, .print-content td { border: 1px solid #000 !important; padding: 4px !important; }
+    html, body > *:not(.print-content) { display: none !important; }
+    /* Hide any potential scrollbars */
+    * { -webkit-print-color-adjust: exact; overflow: hidden !important; }
 }

@@ -1,4 +1,4 @@
-{{-- reports.blade.php --}}
+{{-- reports.index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
