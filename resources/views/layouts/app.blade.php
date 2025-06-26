@@ -13,8 +13,14 @@
         }
         @media print {
             header, aside, .sidebar, #sidebar-overlay { display: none !important; }
-            main { width: 100% !important; padding: 0 !important; overflow: hidden !important; }
+            main {
+                width: 100% !important;
+                padding: 0 !important;
+                overflow: visible !important; 
+                margin: 0 !important;
+            }
             body { overflow: hidden !important; }
+            .a4-container { margin: 0 !important; padding: 0 !important; }
         }
     </style>
 </head>
@@ -55,7 +61,7 @@
                         </div>
                     </nav>
                 </header>
-                <main class="flex-1 overflow-y-auto container mx-auto px-4 py-6">
+                <main class="flex-1 overflow-y-auto container mx-auto px-0 py-0"> <!-- Removed padding -->
                     @yield('content')
                 </main>
             </div>

@@ -1,13 +1,23 @@
 @media print {
     body { margin: 0; font-size: 12pt; overflow: hidden !important; }
     .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle { display: none !important; }
-    main { width: 100%; padding: 0; overflow: hidden !important; }
+    main { width: 100% !important; padding: 0 !important; overflow: visible !important; margin: 0 !important; }
     .container { max-width: none; overflow: hidden !important; }
-    @page { size: A4 landscape; margin: 0.5cm; }
+    @page { size: A4 landscape; margin: 0.3cm; }
     .print-content { display: block !important; overflow: hidden !important; }
     .print-content table { width: 100% !important; border-collapse: collapse !important; overflow: hidden !important; }
-    .print-content th, .print-content td { border: 1px solid #000 !important; padding: 4px !important; }
+    .print-content th, .print-content td {
+        border: 1px solid #000 !important;
+        padding: 2px !important;
+        font-size: 9pt !important;
+        min-width: 0 !important;
+        text-align: left !important;
+    }
+    .print-content .text-center { text-align: center !important; }
     html, body > *:not(.print-content) { display: none !important; }
     /* Hide any potential scrollbars */
     * { -webkit-print-color-adjust: exact; overflow: hidden !important; }
+    /* Conditional page break for Public Health */
+    .print-content table[discipline="Public Health"] { page-break-inside: auto !important; }
+    .print-content table { page-break-inside: avoid !important; }
 }
