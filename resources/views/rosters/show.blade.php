@@ -6,7 +6,7 @@
         ? $roster->discipline->units->sum(fn($unit) => $unit->subunits?->count() ?? 0)
         : 0;
 @endphp
-<div class="container mx-auto px-1 py-2">
+<div class="a4-container">
     <div class="print-content">
         <div class="text-center mb-1">
             <h2 class="text-xl font-bold">
@@ -43,7 +43,6 @@
                                     @endforeach
                                 </td>
                             @endif
-
                             @if($loopIndex === 0)
                                 <td class="border p-1 align-top" rowspan="{{ $unit->subunits->count() }}">
                                     <table class="w-full border-collapse">
@@ -101,10 +100,7 @@
             </tbody>
         </table>
     </div>
-    <div class="flex justify-center mt-6 space-x-4 print-hidden">
-        <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Print</button>
-        <button onclick="shuffleRoster()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Shuffle</button>
-    </div>
+    
 </div>
 @endsection
 
@@ -118,38 +114,4 @@
         .then(r=>r.json()).then(d=>d.success?location.reload():alert('Error:'+d.message)).catch(()=>alert('Shuffle failed'));
     }
 </script>
-@endpush
-
-@push('styles')
-<style>
-    @media print {
-        @page { size: A4 landscape; margin: 0.2cm; }
-        html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
-        .print-hidden, header, aside, nav, .sidebar, #sidebar-overlay, #mobile-menu-button, #theme-toggle { display:none!important; }
-        .print-content {
-            transform: scale(0.75); /* adjust scale as needed */
-            transform-origin: top left;
-            width:100%;
-        }
-        /* Ensure fixed layout for main and nested tables */
-        .print-content table {
-            width:100%!important;
-            border-collapse:collapse!important;
-            table-layout:fixed!important;
-            page-break-inside:avoid!important;
-        }
-        .print-content table table {
-            width:100%!important;
-            table-layout:fixed!important;
-        }
-        th, td {
-            border:1px solid #000!important;
-            padding:1px!important;
-            font-size:6pt!important;
-            vertical-align:top!important;
-            word-wrap:break-word;
-        }
-        h2 { font-size:12pt!important; margin:0!important; padding:0!important; }
-    }
-</style>
 @endpush

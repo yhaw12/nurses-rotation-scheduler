@@ -12,15 +12,86 @@
             .sidebar.expanded { transform: translateX(0); }
         }
         @media print {
-            header, aside, .sidebar, #sidebar-overlay { display: none !important; }
+            /* Define A4 landscape dimensions, adjusted for Letter compatibility */
+            .a4-container {
+                width: 1084px !important; /* Slightly less than 1122.52px to fit Letter when scaled */
+                height: 760px !important; /* Slightly less than 793.7px to account for margins */
+                margin: 0 auto !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                transform: scale(0.92) !important; /* Scale to fit both A4 and Letter */
+                transform-origin: top left !important;
+            }
+            /* Hide non-print elements */
+            header, aside, .sidebar, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
+                display: none !important;
+            }
+            /* Ensure main and body fit the layout */
             main {
                 width: 100% !important;
                 padding: 0 !important;
-                overflow: visible !important; 
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+            body {
+                overflow: hidden !important;
                 margin: 0 !important;
             }
-            body { overflow: hidden !important; }
-            .a4-container { margin: 0 !important; padding: 0 !important; }
+            /* Style print content */
+            .print-content {
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .print-content table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            .print-content th, .print-content td {
+                border: 1px solid #000 !important;
+                padding: 1px !important; /* Reduced from 2px */
+                font-size: 8pt !important; /* Reduced from 9pt */
+                vertical-align: top !important;
+                line-height: 1.0 !important; /* Added to minimize vertical space */
+            }
+            /* Define column widths to total 100% */
+            .print-content th:nth-child(1), .print-content td:nth-child(1) { width: 20% !important; }
+            .print-content th:nth-child(2), .print-content td:nth-child(2) { width: 8% !important; }
+            .print-content th:nth-child(3), .print-content td:nth-child(3) { width: 8% !important; }
+            .print-content th:nth-child(4), .print-content td:nth-child(4) { width: 8% !important; }
+            .print-content th:nth-child(5), .print-content td:nth-child(5) { width: 16% !important; }
+            .print-content th:nth-child(6), .print-content td:nth-child(6) { width: 20% !important; }
+            .print-content th:nth-child(7), .print-content td:nth-child(7) { width: 20% !important; }
+            /* Style nested tables */
+            .print-content table table {
+                width: 100% !important;
+                border: none !important;
+            }
+            .print-content table table td {
+                border: none !important;
+                padding: 0 !important;
+                font-size: 8pt !important; /* Match main table */
+                line-height: 1.0 !important;
+            }
+            /* Style header */
+            h2 {
+                font-size: 10pt !important; /* Reduced from 12pt */
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .print-content .text-sm {
+                font-size: 7pt !important; /* Reduced for date text */
+                margin: 0 !important;
+            }
+            .print-content .mb-1 {
+                margin-bottom: 1px !important; /* Reduced from 4px */
+            }
+            /* Adjust row height */
+            .h-5 {
+                height: 18px !important; /* Reduced from 24px */
+            }
+            /* Page setup */
+            @page { size: A4 landscape; margin: 0.2cm; }
         }
     </style>
 </head>
@@ -61,7 +132,7 @@
                         </div>
                     </nav>
                 </header>
-                <main class="flex-1 overflow-y-auto container mx-auto px-0 py-0"> <!-- Removed padding -->
+                <main class="flex-1 overflow-y-auto container mx-auto px-0 py-0">
                     @yield('content')
                 </main>
             </div>
