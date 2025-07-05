@@ -21,7 +21,7 @@
         </div>
         <table class="w-full border-collapse text-sm">
             <thead>
-                <tr class="bg-gray-100 h-6">
+                <tr class="bg-gray-100 h-5">
                     <th class="border p-1">NAMES</th>
                     <th class="border p-1">DURATION</th>
                     <th class="border p-1">START DATE</th>
@@ -37,9 +37,9 @@
                     @foreach($unit->subunits as $loopIndex => $sub)
                         <tr class="h-6">
                             @if($unitIndex === 0 && $loopIndex === 0)
-                                <td class="border p-1 align-top" rowspan="{{ $totalRows }}">
+                                <td class="border p-1 mt-4 align-top" rowspan="{{ $totalRows }}">
                                     @foreach($assignments->pluck('student_name')->unique() as $name)
-                                        <div class="uppercase mb-1">{{ $name }}</div>
+                                        <div class="uppercase mb-0.5 px-2 text-sm font-semibold">{{ $name }}</div>
                                     @endforeach
                                 </td>
                             @endif
@@ -50,7 +50,7 @@
                                             <tr class="h-6"><td></td></tr>
                                             @foreach($unit->subunits as $s)
                                                 <tr class="h-6">
-                                                    <td class="text-center">{{ $s->duration_weeks }} weeks</td>
+                                                    <td class="text-center">{{ strtoupper($s->duration_weeks . ' WEEKS') }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -81,11 +81,11 @@
                                     </table>
                                 </td>
                                 <td class="border p-1 align-top" rowspan="{{ $unit->subunits->count() }}">
-                                    <div class="text-center font-bold">{{ strtoupper($unit->name) }}</div>
                                     <table class="w-full border-collapse">
                                         <tbody>
+                                            <tr class="h-6"><td class="text-center font-bold">{{ strtoupper($unit->name) }}</td></tr>
                                             @foreach($unit->subunits as $s)
-                                                <tr class="h-6"><td>{{ $s->name }}</td></tr>
+                                                <tr class="h-6"><td class="text-center">{{ strtoupper($s->name) }}</td></tr>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -100,7 +100,10 @@
             </tbody>
         </table>
     </div>
-    
+    <div class="flex justify-center mt-6 space-x-4 print-hidden">
+               <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Print</button>
+        <button onclick="shuffleRoster()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Shuffle</button>
+    </div>
 </div>
 @endsection
 

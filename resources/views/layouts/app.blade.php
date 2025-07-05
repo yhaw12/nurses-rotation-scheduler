@@ -1,3 +1,4 @@
+{{-- layouts.app.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +15,11 @@
         @media print {
             /* Define A4 landscape dimensions, adjusted for Letter compatibility */
             .a4-container {
-                width: 1084px !important; /* Slightly less than 1122.52px to fit Letter when scaled */
-                height: 760px !important; /* Slightly less than 793.7px to account for margins */
+                width: 1084px !important; /* Slightly less than 1122.52px */
+                height: 760px !important; /* Slightly less than 793.7px */
                 margin: 0 auto !important;
                 padding: 0 !important;
                 overflow: visible !important;
-                transform: scale(0.92) !important; /* Scale to fit both A4 and Letter */
                 transform-origin: top left !important;
             }
             /* Hide non-print elements */
@@ -52,7 +52,10 @@
                 padding: 1px !important; /* Reduced from 2px */
                 font-size: 8pt !important; /* Reduced from 9pt */
                 vertical-align: top !important;
-                line-height: 1.0 !important; /* Added to minimize vertical space */
+                line-height: 1.0 !important;
+            }
+            .print-content .text-center {
+                text-align: center !important;
             }
             /* Define column widths to total 100% */
             .print-content th:nth-child(1), .print-content td:nth-child(1) { width: 20% !important; }
@@ -60,8 +63,8 @@
             .print-content th:nth-child(3), .print-content td:nth-child(3) { width: 8% !important; }
             .print-content th:nth-child(4), .print-content td:nth-child(4) { width: 8% !important; }
             .print-content th:nth-child(5), .print-content td:nth-child(5) { width: 16% !important; }
-            .print-content th:nth-child(6), .print-content td:nth-child(6) { width: 20% !important; }
-            .print-content th:nth-child(7), .print-content td:nth-child(7) { width: 20% !important; }
+            .print-content th:nth-child(6), .print-content td:nth-child(6) { width: 10% !important; }
+            .print-content th:nth-child(7), .print-content td:nth-child(7) { width: 30% !important; }
             /* Style nested tables */
             .print-content table table {
                 width: 100% !important;
@@ -70,7 +73,7 @@
             .print-content table table td {
                 border: none !important;
                 padding: 0 !important;
-                font-size: 8pt !important; /* Match main table */
+                font-size: 8pt !important;
                 line-height: 1.0 !important;
             }
             /* Style header */
@@ -79,12 +82,16 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
+            .print-content .text-lg {
+                font-size: 9pt !important; /* Reduced from ~16pt */
+                margin: 0 !important;
+            }
             .print-content .text-sm {
-                font-size: 7pt !important; /* Reduced for date text */
+                font-size: 7pt !important;
                 margin: 0 !important;
             }
             .print-content .mb-1 {
-                margin-bottom: 1px !important; /* Reduced from 4px */
+                margin-bottom: 1px !important;
             }
             /* Adjust row height */
             .h-5 {
@@ -120,7 +127,7 @@
                                     <path d="M17.293 13.293A8 8 0 116.707 2.707a6 6 0 1010.586 10.586z"/>
                                 </svg>
                                 <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.03a1 1 0 10-1.44 1.44l.7.7a1 1 0 101.44-1.44l-.7-.7zM18 9a1 1 0 110 2h-1a1 1 0 110-2h1zM14.22 15.97a1 1 0 00-1.44-1.44l-.7.7a1 1 0 101.44 1.44l.7-.7zM11 18a1 1 0 10-2 0v-1a1 1 0 102 0v1zM6.78 15.97l-.7-.7a1 1 0 10-1.44 1.44l.7.7a1 1 0 001.44-1.44zM4 9a1 1 0 100 2H3a1 1 0 100-2h1zM6.78 4.03l.7.7a1 1 0 101.44-1.44l-.7-.7a1 1 0 00-1.44 1.44zM10 5a5 5 0 100 10A5 5 0 0010 5z"/>
+                                    <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 2.03a1 1 0 10-1.44 1.44l.7.7a1 1 0 101.44-1.44l-.7-.7zM18 9a1 1 0 110 2h-1a1 1 0 110-2h1zM14.22 15.97a1 1 0 00-1.44-1.44l-.7.7a1 1 0 101.44 1.44l.7-.7zM11 18a1 1 0 10-2 0v1zM6.78 15.97l-.7-.7a1 1 0 10-1.44 1.44l.7.7a1 1 0 001.44-1.44zM4 9a1 1 0 100 2H3a1 1 0 100-2h1zM6.78 4.03l.7.7a1 1 0 101.44-1.44l-.7-.7a1 1 0 00-1.44 1.44zM10 5a5 5 0 100 10A5 5 0 0010 5z"/>
                                 </svg>
                             </button>
                             <div class="text-gray-600 font-medium text-sm flex items-center gap-2">
