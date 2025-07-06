@@ -1,4 +1,3 @@
-/* PRINT CSS */
 @media print {
     body { margin: 0; font-size: 14pt; overflow: hidden !important; }
     .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle { display: none !important; }
@@ -19,4 +18,23 @@
     * { -webkit-print-color-adjust: exact; overflow: hidden !important; }
     .print-content table { page-break-inside: avoid !important; }
     .h-6 { height: 18px !important; }
+    /* Explicitly set equal widths for DURATION, START DATE, and END DATE */
+    .print-content th:nth-child(2), .print-content td:nth-child(2) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
+    .print-content th:nth-child(3), .print-content td:nth-child(3) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
+    .print-content th:nth-child(4), .print-content td:nth-child(4) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
+    /* Ensure nested tables in DURATION respect parent column width */
+    .print-content table table {
+        width: 100% !important;
+        border: none !important;
+        table-layout: fixed !important;
+    }
+    .print-content table table td {
+        border: none !important;
+        padding: 0 !important;
+        font-size: 8pt !important;
+        line-height: 1.0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
 }

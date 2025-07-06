@@ -6,6 +6,8 @@ use App\Models\Discipline;
 use App\Models\Roster;
 use App\Models\RosterAssignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class RosterController extends Controller
 {
@@ -71,29 +73,52 @@ class RosterController extends Controller
             'created_by'    => auth()->id(),
         ]);
 
-        // Assign each student into each subunit in sequence
-        foreach ($students as $student) {
-            $cursor = $data['start_date'];
+        // Generate fixed date sequence based on original unit order
+        $dateSequence = [];
+        $cursor = Carbon::parse($data['start_date']);
+        foreach ($discipline->units as $unit) {
+            foreach ($unit->subunits as $sub) {
+                $end = $cursor->copy()->addWeeks($sub->duration_weeks)->subDay()->format('Y-m-d');
+                $dateSequence[] = [
+                    'start_date' => $cursor->format('Y-m-d'),
+                    'end_date'   => $end,
+                    'duration_weeks' => $sub->duration_weeks,
+                ];
+                $cursor->addWeeks($sub->duration_weeks);
+            }
+        }
 
-            foreach ($discipline->units as $unit) {
+        // Assign each student a shuffled unit sequence with fixed dates
+        $groupCount = count($students);
+        $unitSequences = [];
+        for ($i = 0; $i < $groupCount; $i++) {
+            $unitSequences[] = $discipline->units->shuffle()->pluck('id')->toArray();
+        }
+
+        foreach ($students as $index => $student) {
+            $unitIds = $unitSequences[$index % $groupCount];
+            $subunitIndex = 0;
+
+            foreach ($unitIds as $unitIndex => $unitId) {
+                $unit = $discipline->units->find($unitId);
                 foreach ($unit->subunits as $sub) {
-                    $end = date('Y-m-d', strtotime("$cursor +{$sub->duration_weeks} weeks -1 day"));
-
+                    if ($subunitIndex >= count($dateSequence)) {
+                        break 2; // Stop if we run out of date slots
+                    }
+                    $dates = $dateSequence[$subunitIndex];
                     RosterAssignment::create([
                         'roster_id'    => $roster->id,
                         'student_name' => $student,
                         'unit_id'      => $unit->id,
                         'subunit_id'   => $sub->id,
-                        'start_date'   => $cursor,
-                        'end_date'     => $end,
+                        'start_date'   => $dates['start_date'],
+                        'end_date'     => $dates['end_date'],
                     ]);
-
-                    $cursor = date('Y-m-d', strtotime("$end +1 day"));
-
-                    // Stop this student if we passed overall end_date
-                    if ($cursor > $data['end_date']) {
-                        break 2;
-                    }
+                    $subunitIndex++;
+                }
+                // Update sort_order for first group's sequence
+                if ($index === 0) {
+                    $unit->update(['sort_order' => $unitIndex + 1]);
                 }
             }
         }
@@ -120,49 +145,84 @@ class RosterController extends Controller
     }
 
     /**
-     * Shuffle the unit order for all students in the roster.
+     * Shuffle the unit order for all students in the roster, keeping dates fixed.
      *
      * @param \App\Models\Roster $roster
      * @return \Illuminate\Http\JsonResponse
      */
-    public function shuffle(Roster $roster)
+   public function shuffle(Roster $roster)
     {
-        // Load discipline with units and subunits
-        $discipline = $roster->discipline()->with('units.subunits')->first();
+        try {
+            DB::beginTransaction();
 
-        // Get unique student names
-        $students = $roster->assignments()->pluck('student_name')->unique()->values();
+            $discipline = $roster->discipline()->with('units.subunits')->first();
+            $units = $discipline->units;
 
-        // Randomize unit order
-        $units = $discipline->units->shuffle();
+            $students = $roster->assignments()->pluck('student_name')->unique()->values();
+            if ($students->isEmpty()) {
+                return response()->json(['success' => false, 'message' => 'No students found in roster'], 400);
+            }
 
-        // Delete existing assignments
-        $roster->assignments()->delete();
-
-        // Reassign each student to subunits in the new unit order
-        foreach ($students as $student) {
-            $cursor = $roster->start_date;
-
+            $dateSequence = [];
+            $cursor = Carbon::parse($roster->start_date);
             foreach ($units as $unit) {
                 foreach ($unit->subunits as $sub) {
-                    $end = date('Y-m-d', strtotime("$cursor +{$sub->duration_weeks} weeks -1 day"));
-                    RosterAssignment::create([
-                        'roster_id'    => $roster->id,
-                        'student_name' => $student,
-                        'unit_id'      => $unit->id,
-                        'subunit_id'   => $sub->id,
-                        'start_date'   => $cursor,
-                        'end_date'     => $end,
-                    ]);
-                    $cursor = date('Y-m-d', strtotime("$end +1 day"));
+                    $end = $cursor->copy()->addWeeks($sub->duration_weeks)->subDay()->format('Y-m-d');
+                    $dateSequence[] = [
+                        'start_date' => $cursor->format('Y-m-d'),
+                        'end_date'   => $end,
+                        'duration_weeks' => $sub->duration_weeks,
+                    ];
+                    $cursor->addWeeks($sub->duration_weeks);
+                }
+            }
 
-                    // Stop if we exceed the roster's end date
-                    if ($cursor > $roster->end_date) {
-                        break 2;
+            // Soft delete existing assignments instead of permanent delete
+            $roster->assignments()->delete();
+
+            $groupCount = count($students);
+            $unitSequences = [];
+            for ($i = 0; $i < $groupCount; $i++) {
+                $unitSequences[] = $units->shuffle()->pluck('id')->toArray();
+            }
+
+            $assignments = [];
+            foreach ($students as $index => $student) {
+                $unitIds = $unitSequences[$index % $groupCount];
+                $subunitIndex = 0;
+
+                foreach ($unitIds as $unitIndex => $unitId) {
+                    $unit = $units->find($unitId);
+                    foreach ($unit->subunits as $sub) {
+                        if ($subunitIndex >= count($dateSequence)) {
+                            break 2;
+                        }
+                        $dates = $dateSequence[$subunitIndex];
+                        $assignments[] = [
+                            'roster_id'    => $roster->id,
+                            'student_name' => $student,
+                            'unit_id'      => $unit->id,
+                            'subunit_id'   => $sub->id,
+                            'start_date'   => $dates['start_date'],
+                            'end_date'     => $dates['end_date'],
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ];
+                        $subunitIndex++;
+                    }
+                    if ($index === 0) {
+                        $unit->update(['sort_order' => $unitIndex + 1]);
                     }
                 }
             }
+
+            RosterAssignment::insert($assignments);
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Roster shuffled successfully']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => 'Failed to shuffle roster: ' . $e->getMessage()], 500);
         }
-        return response()->json(['success' => true]);
     }
 }

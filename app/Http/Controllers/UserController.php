@@ -50,6 +50,7 @@ class UserController extends Controller
 
     public function showRegistrationForm()
     {
+        // dd('👉 hit showRegistrationForm');
         return view('auth.register');
     }
 

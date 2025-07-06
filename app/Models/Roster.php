@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Roster extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = ['discipline_id', 'start_date', 'end_date', 'created_by'];
 
     public function discipline()

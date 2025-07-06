@@ -8,6 +8,10 @@ class RosterAssignment extends Model
 {
     protected $fillable = ['roster_id', 'student_name', 'unit_id', 'subunit_id', 'start_date', 'end_date'];
 
+    protected $casts = [
+        'student_name' => 'encrypted'
+    ];
+
     public function roster()
     {
         return $this->belongsTo(Roster::class);

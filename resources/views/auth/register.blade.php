@@ -1,3 +1,4 @@
+{{-- REGISTER --}}
 @extends('layouts.app')
 
 @section('content')

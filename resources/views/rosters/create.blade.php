@@ -1,4 +1,3 @@
-{{-- create.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -6,8 +5,8 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js" defer></script>
 
 <div class="container mx-auto px-4 py-8" x-data="rosterForm()">
-  <div class="bg-white p-8 rounded-lg shadow max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center">
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
       Create Roster for {{ $displayDiscipline }}
     </h1>
 
@@ -18,12 +17,12 @@
 
       <!-- Student Tags -->
       <div>
-        <label class="block text-sm font-medium">Student Names</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Student Names</label>
         <div class="mt-1 flex flex-wrap gap-2">
           <template x-for="(name, i) in names" :key="i">
-            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full flex items-center">
+            <span class="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 px-2 py-1 rounded-full flex items-center">
               <span x-text="name"></span>
-              <button type="button" class="ml-1" @click="removeName(i)">×</button>
+              <button type="button" class="ml-1 text-blue-800 dark:text-blue-200 hover:text-blue-600 dark:hover:text-blue-400" @click="removeName(i)">×</button>
             </span>
           </template>
           <input
@@ -31,10 +30,10 @@
             x-model="newName"
             @keydown.enter.prevent="addName()"
             placeholder="Type a name + Enter"
-            class="flex-1 border rounded px-2 py-1"
+            class="flex-1 border rounded px-2 py-1 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 dark:focus:ring-blue-400"
           />
         </div>
-        @error('student_names') <p class="text-red-600">{{ $message }}</p> @enderror
+        @error('student_names') <p class="text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
 
         <!-- Hidden textarea for POST -->
         <textarea name="student_names" x-model="namesString" class="hidden"></textarea>
@@ -43,26 +42,26 @@
       <!-- Dates -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium">Start Date</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Start Date</label>
           <input
             type="date"
             name="start_date"
             x-model="startDate"
             required
-            class="mt-1 block w-full border rounded p-1"
+            class="mt-1 block w-full border rounded p-1 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 dark:focus:ring-blue-400"
           />
-          @error('start_date') <p class="text-red-600">{{ $message }}</p> @enderror
+          @error('start_date') <p class="text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
         </div>
         <div>
-          <label class="block text-sm font-medium">End Date</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">End Date</label>
           <input
             type="date"
             name="end_date"
             x-model="endDate"
             required
-            class="mt-1 block w-full border rounded p-1"
+            class="mt-1 block w-full border rounded p-1 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 dark:focus:ring-blue-400"
           />
-          @error('end_date') <p class="text-red-600">{{ $message }}</p> @enderror
+          @error('end_date') <p class="text-red-600 dark:text-red-400">{{ $message }}</p> @enderror
         </div>
       </div>
 
@@ -70,7 +69,7 @@
       <div class="text-right">
         <button
           type="submit"
-          class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+          class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 disabled:bg-gray-400 dark:disabled:bg-gray-600"
           :disabled="names.length === 0"
         >
           Schedule
