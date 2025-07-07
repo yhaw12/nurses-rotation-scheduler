@@ -15,9 +15,7 @@ class DashboardController extends Controller
     public function index()
     {
         // Fetch all rosters with their associated disciplines
-        $rosters = Roster::with('discipline')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $rosters = auth()->user()->is_admin ? Roster::all() : Roster::where('created_by', auth()->id())->get();
 
         return view('dashboard', compact('rosters'));
     }

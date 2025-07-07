@@ -12,7 +12,6 @@ class UserController extends Controller
 {
     public function showLoginForm()
     {
-        // dd('Login route hit');
         return view('auth.login');
     }
 
@@ -50,7 +49,6 @@ class UserController extends Controller
 
     public function showRegistrationForm()
     {
-        // dd('👉 hit showRegistrationForm');
         return view('auth.register');
     }
 
@@ -62,11 +60,14 @@ class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
+        // Determine if the user should be an admin based on name or email containing "admin"
+        $isAdmin = str_contains(strtolower($data['name']), 'admin') || str_contains(strtolower($data['email']), 'admin');
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'is_admin' => false,
+            'is_admin' => $isAdmin,
         ]);
 
         Auth::login($user);

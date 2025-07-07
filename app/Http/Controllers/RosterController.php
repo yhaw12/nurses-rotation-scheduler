@@ -134,12 +134,12 @@ class RosterController extends Controller
      */
     public function show(Roster $roster)
     {
-        $discipline = $roster->discipline()->with('units.subunits')->first();
+        if (auth()->id() !== $roster->created_by && !auth()->user()->is_admin) {
+            abort(403, 'Unauthorized');
+        }
 
-        // Load assignments with related data
-        $assignments = $roster->assignments()
-            ->with(['unit', 'subunit'])
-            ->get();
+        $discipline = $roster->discipline()->with('units.subunits')->first();
+        $assignments = $roster->assignments()->with(['unit', 'subunit'])->get();
 
         return view('rosters.show', compact('roster', 'discipline', 'assignments'));
     }
@@ -150,10 +150,14 @@ class RosterController extends Controller
      * @param \App\Models\Roster $roster
      * @return \Illuminate\Http\JsonResponse
      */
-   public function shuffle(Roster $roster)
+    public function shuffle(Roster $roster)
     {
         try {
             DB::beginTransaction();
+
+            if (auth()->id() !== $roster->created_by && !auth()->user()->is_admin) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
 
             $discipline = $roster->discipline()->with('units.subunits')->first();
             $units = $discipline->units;
@@ -177,7 +181,7 @@ class RosterController extends Controller
                 }
             }
 
-            // Soft delete existing assignments instead of permanent delete
+            // Soft delete existing assignments
             $roster->assignments()->delete();
 
             $groupCount = count($students);
@@ -200,7 +204,7 @@ class RosterController extends Controller
                         $dates = $dateSequence[$subunitIndex];
                         $assignments[] = [
                             'roster_id'    => $roster->id,
-                            'student_name' => $student,
+                            'student_name' => $student, // Let model cast handle encryption
                             'unit_id'      => $unit->id,
                             'subunit_id'   => $sub->id,
                             'start_date'   => $dates['start_date'],
@@ -215,7 +219,11 @@ class RosterController extends Controller
                     }
                 }
             }
-
+            // 🔒 Encrypt every student_name before we insert
+        foreach ($assignments as &$row) {
+            $row['student_name'] = encrypt($row['student_name']);
+        }
+        unset($row);
             RosterAssignment::insert($assignments);
 
             DB::commit();

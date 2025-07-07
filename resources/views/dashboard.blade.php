@@ -76,7 +76,7 @@
             <div class="flex space-x-2">
                 @if(auth()->user()->is_admin)
                     <a href="{{ route('disciplines.index') }}" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Manage Disciplines</a>
-                    <a href="{{ route('units.create', ['discipline' => $rosters->first()->discipline->id ?? 1]) }}" class="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Unit</a>
+                    {{-- <a href="{{ route('units.create', ['discipline' => $rosters->first()->discipline->id ?? 1]) }}" class="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Unit</a> --}}
                 @endif
                 <button id="exportCsv" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Export CSV</button>
             </div>
