@@ -1,28 +1,45 @@
 @media print {
-    body { margin: 0; font-size: 14pt; overflow: hidden !important; }
-    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle { display: none !important; }
-    main { width: 100% !important; padding: 0 !important; overflow: visible !important; margin: 0 !important; }
-    .container { max-width: none; overflow: hidden !important; }
-    @page { size: A4 landscape; margin: 0.3cm; }
-    .print-content { display: block !important; overflow: hidden !important; }
-    .print-content table { width: 100% !important; border-collapse: collapse !important; overflow: hidden !important; }
+    body {
+        margin: 0 !important;
+        font-size: 14pt !important;
+        overflow: hidden !important;
+    }
+    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
+        display: none !important;
+    }
+    main {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow: visible !important;
+    }
+    .a4-container {
+        width: 1084px !important;
+        height: 760px !important;
+        margin: 0 40px !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+    .print-content {
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    .print-content table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important; /* Enforce colgroup widths */
+    }
     .print-content th, .print-content td {
         border: 1px solid #000 !important;
-        padding: 2px !important;
-        font-size: 9pt !important;
-        min-width: 0 !important;
-        text-align: left !important;
+        padding: 1px !important;
+        font-size: 8pt !important;
+        vertical-align: top !important;
+        line-height: 1.0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
     }
-    .print-content .text-center { text-align: center !important; }
-    html, body > *:not(.print-content) { display: none !important; }
-    * { -webkit-print-color-adjust: exact; overflow: hidden !important; }
-    .print-content table { page-break-inside: avoid !important; }
-    .h-6 { height: 18px !important; }
-    /* Explicitly set equal widths for DURATION, START DATE, and END DATE */
-    .print-content th:nth-child(2), .print-content td:nth-child(2) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
-    .print-content th:nth-child(3), .print-content td:nth-child(3) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
-    .print-content th:nth-child(4), .print-content td:nth-child(4) { width: 8% !important; min-width: 8% !important; max-width: 8% !important; }
-    /* Ensure nested tables in DURATION respect parent column width */
     .print-content table table {
         width: 100% !important;
         border: none !important;
@@ -36,5 +53,9 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
+    }
+    @page {
+        size: A4 landscape;
+        margin: 0.2cm;
     }
 }

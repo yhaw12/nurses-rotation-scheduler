@@ -6,7 +6,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Roster System</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/print.css') }}" media="print">
     <style>
         @media (max-width: 768px) {
             .sidebar.expanded {
@@ -18,15 +17,11 @@
             }
         }
         @media print {
-            .a4-container {
-                width: 1084px !important;
-                height: 760px !important;
-                margin: 0 40px !important;
-                padding: 0 !important;
-                overflow: visible !important;
-                transform-origin: top left !important;
+            body {
+                margin: 0 !important;
+                overflow: hidden !important;
             }
-            header, aside, .sidebar, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
+            .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay {
                 display: none !important;
             }
             main {
@@ -35,74 +30,58 @@
                 margin: 0 !important;
                 overflow: visible !important;
             }
-            body {
-                overflow: hidden !important;
-                margin: 0 !important;
+            .a4-container {
+                width: 1084px !important;
+                height: 760px !important;
+                margin: 0 40px !important;
+                padding: 0 !important;
+                overflow: visible !important;
             }
             .print-content {
                 width: 100% !important;
                 height: auto !important;
                 overflow: visible !important;
             }
-            .print-content table {
-                width: 100% !important;
-                border-collapse: collapse !important;
+            @page {
+                size: A4 landscape;
+                margin: 1cm;
             }
-            .print-content th, .print-content td {
-                border: 1px solid #000 !important;
-                padding: 1px !important;
-                font-size: 8pt !important;
-                vertical-align: top !important;
-                line-height: 1.0 !important;
-            }
-            .print-content .text-center {
-                text-align: center !important;
-            }
-            .print-content th:nth-child(1), .print-content td:nth-child(1) { width: 20% !important; }
-            .print-content th:nth-child(2), .print-content td:nth-child(2) { width: 8% !important; }
-            .print-content th:nth-child(3), .print-content td:nth-child(3) { width: 8% !important; }
-            .print-content th:nth-child(4), .print-content td:nth-child(4) { width: 8% !important; }
-            .print-content th:nth-child(5), .print-content td:nth-child(5) { width: 16% !important; }
-            .print-content th:nth-child(6), .print-content td:nth-child(6) { width: 10% !important; }
-            .print-content th:nth-child(7), .print-content td:nth-child(7) { width: 30% !important; }
-            .print-content table table {
-                width: 100% !important;
-                border: none !important;
-            }
-            .print-content table table td {
-                border: none !important;
-                padding: 0 !important;
-                font-size: 8pt !important;
-                line-height: 1.0 !important;
-            }
-            h2 {
-                font-size: 10pt !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            .print-content .text-lg {
-                font-size: 9pt !important;
-                margin: 0 !important;
-            }
-            .print-content .text-sm {
-                font-size: 7pt !important;
-                margin: 0 !important;
-            }
-            .print-content .mb-1 {
-                margin-bottom: 1px !important;
-            }
-            .h-5 {
-                height: 18px !important;
-            }
-            @page { size: A4 landscape; margin: 0.2cm; }
+        }
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            transition: opacity 0.3s ease;
+        }
+        #loading-overlay.hidden {
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3B82F6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white font-sans">
     <!-- Loading Overlay -->
-    {{-- <div id="loading-overlay" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
-        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-    </div> --}}
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+    </div>
 
     @auth
         <div class="flex h-screen relative">
@@ -154,7 +133,7 @@
     @endguest
 
     <!-- Scripts -->
-    <script src="{{ asset('js/chart.min.js') }}"></script> 
+    <script src="{{ asset('js/chart.min.js') }}"></script>
 
     @auth
         <script>
@@ -167,7 +146,7 @@
                 const mobileBtn = document.getElementById('mobile-menu-button');
                 const sidebar = document.querySelector('.sidebar');
                 const overlay = document.getElementById('sidebar-overlay');
-                const loadingOverlay = document.getElementById('loading-overlay'); // Define loadingOverlay
+                const loadingOverlay = document.getElementById('loading-overlay');
                 let isDark = stored === 'true' ? true : (stored === 'false' ? false : window.matchMedia('(prefers-color-scheme: dark)').matches);
 
                 const applyTheme = () => {
@@ -179,6 +158,18 @@
                         root.classList.remove('dark');
                         iconSun.classList.add('hidden');
                         iconMoon.classList.remove('hidden');
+                    }
+                };
+
+                const showLoading = () => {
+                    if (loadingOverlay) {
+                        loadingOverlay.classList.remove('hidden');
+                    }
+                };
+
+                const hideLoading = () => {
+                    if (loadingOverlay) {
+                        loadingOverlay.classList.add('hidden');
                     }
                 };
 
@@ -203,12 +194,49 @@
                     });
                 }
 
-                // Hide loading overlay after page load
-                if (loadingOverlay) {
-                    window.addEventListener('load', () => {
-                        loadingOverlay.style.display = 'none';
+                // Intercept link clicks for navigation
+                document.querySelectorAll('a:not([href^="#"])').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        // Skip external links or download links
+                        if (link.href.includes(window.location.host) && !link.hasAttribute('download')) {
+                            showLoading();
+                        }
                     });
-                }
+                });
+
+                // Intercept form submissions
+                document.querySelectorAll('form').forEach(form => {
+                    form.addEventListener('submit', () => {
+                        showLoading();
+                    });
+                });
+
+                // Intercept print button
+                const originalPrint = window.print;
+                window.print = function() {
+                    showLoading();
+                    setTimeout(() => {
+                        originalPrint();
+                        hideLoading();
+                    }, 500); // Brief delay to show overlay
+                };
+
+                // Enhance fetch to show/hide loading overlay
+                const originalFetch = window.fetch;
+                window.fetch = async function(...args) {
+                    showLoading();
+                    try {
+                        const response = await originalFetch(...args);
+                        return response;
+                    } finally {
+                        hideLoading();
+                    }
+                };
+
+                // Ensure loading overlay hides on page load
+                window.addEventListener('load', () => {
+                    hideLoading();
+                });
             })();
         </script>
     @endauth

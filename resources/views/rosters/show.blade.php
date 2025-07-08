@@ -35,7 +35,17 @@
                 KASOA POLYCLINIC
             </div>
         </div>
-        <table class="w-full border-collapse text-sm">
+        <table class="w-full border-collapse text-sm" style="table-layout: fixed;">
+            <colgroup>
+                <!-- Customize these widths as needed, ensuring the total sums to 100% -->
+                <col style="width: 20%;"> <!-- NAMES: Example width -->
+                <col style="width: 10%;"> <!-- DURATION: Example width -->
+                <col style="width: 15%;"> <!-- START DATE: Example width -->
+                <col style="width: 15%;"> <!-- END DATE: Example width -->
+                <col style="width: 20%;"> <!-- UNITS: Example width -->
+                <col style="width: 10%;"> <!-- SIGN: Example width -->
+                <col style="width: 10%;">  <!-- REMARKS: Example width -->
+            </colgroup>
             <thead>
                 <tr class="bg-gray-100 dark:bg-gray-700 h-5">
                     <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">NAMES</th>
@@ -66,7 +76,9 @@
                                             @foreach($unit->subunits as $s)
                                                 @php $dates = $dateSequence[$dateIndex++] ?? ['duration_weeks' => 0]; @endphp
                                                 <tr class="h-6">
-                                                    <td class="text-center text-gray-900 dark:text-gray-100">{{ strtoupper($dates['duration_weeks'] . ' WEEKS') }}</td>
+                                                    <td class="text-center text-gray-900 dark:text-gray-100">
+                                                        {{ strtoupper($dates['duration_weeks'] . ' ' . ($dates['duration_weeks'] == 1 ? '  WEEK' : 'WEEKS')) }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
