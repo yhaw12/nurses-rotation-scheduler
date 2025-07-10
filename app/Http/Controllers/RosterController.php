@@ -140,7 +140,8 @@ class RosterController extends Controller
 
         $discipline = $roster->discipline()->with('units.subunits')->first();
         $assignments = $roster->assignments()->with(['unit', 'subunit'])->get();
-
+    
+        
         return view('rosters.show', compact('roster', 'discipline', 'assignments'));
     }
 
