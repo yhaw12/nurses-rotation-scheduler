@@ -5,8 +5,7 @@
     $totalRows = $roster && $roster->discipline && $roster->discipline->units
         ? $roster->discipline->units->sum(fn($unit) => $unit->subunits?->count() ?? 0)
         : 0;
-    $studentGroups = $assignments->pluck('student_name')->unique()->toArray();
-    $groupAssignments = $assignments->groupBy('student_name');
+    $studentGroups = $assignments->pluck('student_name')->unique()->filter()->values()->toArray();
     $dateSequence = [];
     $cursor = \Carbon\Carbon::parse($roster->start_date);
     foreach ($roster->discipline->units()->orderBy('sort_order')->get() as $unit) {
@@ -20,6 +19,7 @@
         }
     }
     $dateIndex = 0;
+
 @endphp
 <div class="a4-container">
     <div class="print-content">
@@ -35,16 +35,25 @@
                 KASOA POLYCLINIC
             </div>
         </div>
+        {{-- @if (config('app.debug'))
+            <div class="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900 text-gray-800 dark:text-gray-200">
+                <h3 class="font-bold">Debug: Student Names</h3>
+                <ul>
+                    @foreach($studentGroups as $name)
+                        <li>{{ $name }} (Raw: {{ base64_encode($name) }})</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif --}}
         <table class="w-full border-collapse text-sm" style="table-layout: fixed;">
             <colgroup>
-                <!-- Customize these widths as needed, ensuring the total sums to 100% -->
-                <col style="width: 20%;"> <!-- NAMES: Example width -->
-                <col style="width: 10%;"> <!-- DURATION: Example width -->
-                <col style="width: 15%;"> <!-- START DATE: Example width -->
-                <col style="width: 15%;"> <!-- END DATE: Example width -->
-                <col style="width: 20%;"> <!-- UNITS: Example width -->
-                <col style="width: 10%;"> <!-- SIGN: Example width -->
-                <col style="width: 10%;">  <!-- REMARKS: Example width -->
+                <col style="width: 20%;">
+                <col style="width: 10%;">
+                <col style="width: 15%;">
+                <col style="width: 15%;">
+                <col style="width: 20%;">
+                <col style="width: 10%;">
+                <col style="width: 10%;">
             </colgroup>
             <thead>
                 <tr class="bg-gray-100 dark:bg-gray-700 h-5">
@@ -63,7 +72,7 @@
                         <tr class="h-6">
                             @if($unitIndex === 0 && $loopIndex === 0)
                                 <td class="border border-gray-300 dark:border-gray-600 p-1 mt-4 align-top" rowspan="{{ $totalRows }}">
-                                    @foreach($assignments->pluck('student_name')->unique() as $name)
+                                    @foreach($studentGroups as $name)
                                         <div class="uppercase mb-0.5 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $name }}</div>
                                     @endforeach
                                 </td>
@@ -77,7 +86,7 @@
                                                 @php $dates = $dateSequence[$dateIndex++] ?? ['duration_weeks' => 0]; @endphp
                                                 <tr class="h-6">
                                                     <td class="text-center text-gray-900 dark:text-gray-100">
-                                                        {{ strtoupper($dates['duration_weeks'] . ' ' . ($dates['duration_weeks'] == 1 ? '  WEEK' : 'WEEKS')) }}
+                                                        {{ strtoupper($dates['duration_weeks'] . ' ' . ($dates['duration_weeks'] == 1 ? 'WEEK' : 'WEEKS')) }}
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -156,11 +165,11 @@
             if (data.success) {
                 location.reload();
             } else {
-                alert('Error: ' + data.message);
+                alert('Error: ' . data.message);
             }
         })
         .catch(error => {
-            alert('Shuffle failed: ' + error.message);
+            alert('Shuffle failed: ' . error.message);
         })
         .finally(() => {
             if (loadingSpinner) loadingSpinner.classList.add('hidden');

@@ -3,20 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Roster;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the roster system dashboard.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
-        // Fetch all rosters with their associated disciplines
-        $rosters = auth()->user()->is_admin ? Roster::all() : Roster::where('created_by', auth()->id())->get();
+        $rosters = Roster::with(['discipline', 'assignments', 'createdBy'])->get();
 
-        return view('dashboard', compact('rosters'));
+        $activeStudents = $rosters->pluck('assignments')->flatten()->pluck('student_name')->unique()->count();
+
+        Log::debug('Dashboard data', [
+            'roster_count' => $rosters->count(),
+            'active_students' => $activeStudents,
+            'sample_creators' => $rosters->take(5)->pluck('createdBy.name')->toArray()
+        ]);
+
+        return view('dashboard', compact('rosters', 'activeStudents'));
     }
 }

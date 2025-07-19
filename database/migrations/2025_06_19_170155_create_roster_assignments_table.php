@@ -20,7 +20,13 @@ return new class extends Migration
     $table->date('start_date');
     $table->date('end_date');
     $table->timestamps();
-   });
+
+
+    // Add indexes for performance
+            $table->index('roster_id');
+            $table->index(['unit_id', 'subunit_id']);
+            $table->index('start_date');
+    });
     }
 
     /**

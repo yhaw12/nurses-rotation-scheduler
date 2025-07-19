@@ -7,16 +7,11 @@ use App\Models\Roster;
 use App\Models\RosterAssignment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class RosterController extends Controller
 {
-    /**
-     * Show the form for creating a new roster.
-     *
-     * @param string $discipline
-     * @return \Illuminate\View\View
-     */
     public function create($discipline)
     {
         $display = match ($discipline) {
@@ -32,12 +27,6 @@ class RosterController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created roster in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -47,7 +36,6 @@ class RosterController extends Controller
             'end_date'      => 'required|date|after_or_equal:start_date',
         ]);
 
-        // Map slug → DB name, with fallback
         $map = [
             'rgn'                   => 'Registered General Nurses (RGN)',
             'midwives'             => 'Midwives',
@@ -59,13 +47,11 @@ class RosterController extends Controller
             ->with('units.subunits')
             ->firstOrFail();
 
-        // Parse students
         $students = collect(explode("\n", $data['student_names']))
             ->map(fn($n) => trim($n))
             ->filter()
             ->values();
 
-        // Create roster record
         $roster = Roster::create([
             'discipline_id' => $discipline->id,
             'start_date'    => $data['start_date'],
@@ -73,7 +59,6 @@ class RosterController extends Controller
             'created_by'    => auth()->id(),
         ]);
 
-        // Generate fixed date sequence based on original unit order
         $dateSequence = [];
         $cursor = Carbon::parse($data['start_date']);
         foreach ($discipline->units as $unit) {
@@ -88,13 +73,13 @@ class RosterController extends Controller
             }
         }
 
-        // Assign each student a shuffled unit sequence with fixed dates
         $groupCount = count($students);
         $unitSequences = [];
         for ($i = 0; $i < $groupCount; $i++) {
             $unitSequences[] = $discipline->units->shuffle()->pluck('id')->toArray();
         }
 
+        $batch = [];
         foreach ($students as $index => $student) {
             $unitIds = $unitSequences[$index % $groupCount];
             $subunitIndex = 0;
@@ -103,35 +88,37 @@ class RosterController extends Controller
                 $unit = $discipline->units->find($unitId);
                 foreach ($unit->subunits as $sub) {
                     if ($subunitIndex >= count($dateSequence)) {
-                        break 2; // Stop if we run out of date slots
+                        break 2;
                     }
                     $dates = $dateSequence[$subunitIndex];
-                    RosterAssignment::create([
-                        'roster_id'    => $roster->id,
-                        'student_name' => $student,
-                        'unit_id'      => $unit->id,
-                        'subunit_id'   => $sub->id,
-                        'start_date'   => $dates['start_date'],
-                        'end_date'     => $dates['end_date'],
-                    ]);
+                    try {
+                        $batch[] = [
+                            'roster_id'    => $roster->id,
+                            'student_name' => encrypt($student),
+                            'unit_id'      => $unit->id,
+                            'subunit_id'   => $sub->id,
+                            'start_date'   => $dates['start_date'],
+                            'end_date'     => $dates['end_date'],
+                            'created_at'   => now(),
+                            'updated_at'   => now(),
+                        ];
+                    } catch (\Exception $e) {
+                        Log::error('Failed to encrypt student name in store: ' . $student, ['error' => $e->getMessage()]);
+                    }
                     $subunitIndex++;
                 }
-                // Update sort_order for first group's sequence
                 if ($index === 0) {
                     $unit->update(['sort_order' => $unitIndex + 1]);
                 }
             }
         }
 
+        // Batch insert for efficiency
+        DB::table('roster_assignments')->insert($batch);
+
         return redirect()->route('rosters.show', $roster);
     }
 
-    /**
-     * Display the specified roster.
-     *
-     * @param \App\Models\Roster $roster
-     * @return \Illuminate\View\View
-     */
     public function show(Roster $roster)
     {
         if (auth()->id() !== $roster->created_by && !auth()->user()->is_admin) {
@@ -140,17 +127,13 @@ class RosterController extends Controller
 
         $discipline = $roster->discipline()->with('units.subunits')->first();
         $assignments = $roster->assignments()->with(['unit', 'subunit'])->get();
-    
-        
+
+        // Rely on model accessor for decryption
+        $studentNames = $assignments->pluck('student_name')->unique()->toArray();
+
         return view('rosters.show', compact('roster', 'discipline', 'assignments'));
     }
 
-    /**
-     * Shuffle the unit order for all students in the roster, keeping dates fixed.
-     *
-     * @param \App\Models\Roster $roster
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function shuffle(Roster $roster)
     {
         try {

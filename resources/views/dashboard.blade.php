@@ -33,7 +33,7 @@
         </div>
         <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
             <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Active Students</h2>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $rosters->pluck('assignments')->flatten()->pluck('student_name')->unique()->count() ?? 0 }}</p>
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $activeStudents ?? 0 }}</p>
         </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -76,7 +76,6 @@
             <div class="flex space-x-2">
                 @if(auth()->user()->is_admin)
                     <a href="{{ route('disciplines.index') }}" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Manage Disciplines</a>
-                    {{-- <a href="{{ route('units.create', ['discipline' => $rosters->first()->discipline->id ?? 1]) }}" class="bg-green-500 hover:bg-green-600 dark:bg-green-600 dark:hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Unit</a> --}}
                 @endif
                 <button id="exportCsv" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Export CSV</button>
             </div>
@@ -85,9 +84,7 @@
             <p class="text-gray-600 dark:text-gray-300 text-center">No rosters found. Create a new roster to get started.</p>
         @else
             <div class="overflow-x-auto">
-                <table class="w-full border
-
--collapse text-sm" id="rosterTable">
+                <table class="w-full border-collapse text-sm" id="rosterTable">
                     <thead>
                         <tr class="bg-gray-200 dark:bg-gray-700">
                             <th class="border p-2 text-left cursor-pointer" onclick="sortTable(0)">ID <span class="sort-icon">↕</span></th>
@@ -136,7 +133,6 @@
 @push('scripts')
 <script defer>
 document.addEventListener('DOMContentLoaded', () => {
-    // Chart.js
     const ctx = document.getElementById('rosterChart')?.getContext('2d');
     if (ctx && window.Chart) {
         const rosterChart = new Chart(ctx, {
@@ -185,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Chart.js is not loaded.');
     }
 
-    // Filter/Search
     const searchInput = document.getElementById('searchInput');
     const disciplineFilter = document.getElementById('disciplineFilter');
     const dateFilter = document.getElementById('dateFilter');
@@ -232,7 +227,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dateFilter.addEventListener('change', filterTable);
     }
 
-    // Sort
     let sortDirection = {};
     function sortTable(colIndex) {
         if (!rosterTable) return;
@@ -273,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
         th.addEventListener('click', () => sortTable(index));
     });
 
-    // CSV Export
     function exportToCSV() {
         const rows = rosterTable?.querySelectorAll('tr') || [];
         let csvContent = 'data:text/csv;charset=utf-8,';
@@ -304,7 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('exportCsv')?.addEventListener('click', exportToCSV);
 
-    // Show More
     let visibleRows = 10;
     const allRows = @json($rosters ?? []);
     const showMoreBtn = document.getElementById('showMore');
@@ -324,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.id}</td>
                     <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.discipline?.name || ''}</td>
                     <td class="border p-2 text-gray-800 dark:text-gray-200">${new Date(roster.start_date).toLocaleDateString('en-GB')} - ${new Date(roster.end_date).toLocaleDateString('en-GB')}</td>
-                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.created_by?.name ?? 'Unknown'}</td>
+                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.createdBy?.name || 'Unknown'}</td>
                     <td class="border p-2"><span class="${status === 'Active' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">${status}</span></td>
                     <td class="border p-2"><a href="/rosters/${roster.id}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View</a></td>
                 `;
