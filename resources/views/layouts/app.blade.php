@@ -21,7 +21,7 @@
                 margin: 0 !important;
                 overflow: hidden !important;
             }
-            .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay {
+            .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay, footer {
                 display: none !important;
             }
             main {
@@ -75,6 +75,18 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Ensure footer doesn't cause overflow */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white font-sans">
@@ -89,7 +101,7 @@
             <aside class="sidebar w-64 bg-gray-100 dark:bg-gray-800 shadow-md h-screen fixed top-0 left-0 transform -translate-x-full md:translate-x-0 md:static z-30 transition-transform duration-300 ease-in-out">
                 @include('partials.sidebar')
             </aside>
-            <div class="flex-1 flex flex-col">
+            <div class="flex-1 flex flex-col min-h-0">
                 <header class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-10">
                     <nav class="p-4">
                         <div class="container mx-auto flex items-center gap-6">
@@ -122,14 +134,26 @@
                 <main class="flex-1 overflow-y-auto container mx-auto px-4 py-6 bg-gray-100 dark:bg-gray-900">
                     @yield('content')
                 </main>
+
+                <footer class="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 text-white py-4 h-10">
+                <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+                    <p class="text-sm md:text-base"> &copy; {{ now()->year }} <span class="font-semibold">Blankson I.T Solutions</span>. All rights reserved. </p>
+                    {{-- <a href="https://blanksonit.com" class="mt-2 md:mt-0 inline-block bg-white bg-opacity-20 hover:bg-opacity-40 transition rounded-full px-4 py-1 text-sm font-medium" target="_blank" rel="noopener">
+                        Designed by Blankson I.T Solutions
+                    </a> --}}
+                </div>
+                </footer>
+
             </div>
         </div>
+        
     @endauth
 
     @guest
         <main class="flex-1 overflow-y-auto container mx-auto px-4 py-6 bg-gray-100 dark:bg-gray-900">
             @yield('content')
         </main>
+        
     @endguest
 
     <!-- Scripts -->

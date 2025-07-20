@@ -10,8 +10,11 @@ class UnitController extends Controller
 {
     public function index(Discipline $discipline)
     {
-        $units = $discipline->units()->with('subunits')->get();
-        return view('units.index', ['discipline' => $discipline, 'units' => $units]);
+        $units = $discipline->units()->with('subunits')->orderBy('sort_order')->get();
+        return view('units.index', [
+            'discipline' => $discipline,
+            'units' => $units
+        ]);
     }
 
     public function create(Discipline $discipline)
@@ -27,10 +30,9 @@ class UnitController extends Controller
             'sort_order' => 'required|integer|min:0',
         ]);
         $discipline->units()->create($request->only(['name', 'duration_weeks', 'sort_order']));
-        return redirect()->route('disciplines.units.index', $discipline);
+        return redirect()->route('disciplines.units.index', $discipline)->with('success', 'Unit created successfully.');
     }
 
-    // Add edit, update, destroy methods as needed
     public function edit(Discipline $discipline, Unit $unit)
     {
         return view('units.edit', ['discipline' => $discipline, 'unit' => $unit]);
@@ -44,12 +46,12 @@ class UnitController extends Controller
             'sort_order' => 'required|integer|min:0',
         ]);
         $unit->update($request->only(['name', 'duration_weeks', 'sort_order']));
-        return redirect()->route('disciplines.units.index', $discipline);
+        return redirect()->route('disciplines.units.index', $discipline)->with('success', 'Unit updated successfully.');
     }
 
     public function destroy(Discipline $discipline, Unit $unit)
     {
         $unit->delete();
-        return redirect()->route('disciplines.units.index', $discipline);
+        return redirect()->route('disciplines.units.index', $discipline)->with('success', 'Unit deleted successfully.');
     }
 }

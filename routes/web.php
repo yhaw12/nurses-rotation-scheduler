@@ -3,6 +3,7 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\UnitController;
+use App\Http\Controllers\SubunitController;
 use App\Http\Controllers\RosterController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,11 @@ Route::middleware('auth')->group(function () {
     // Units nested under discipline
     Route::resource('disciplines.units', UnitController::class)->shallow();
 
+    // Subunits nested under units
+    Route::get('disciplines/{discipline}/units/{unit}/subunits/edit', [SubunitController::class, 'edit'])->name('disciplines.units.subunits.edit');
+    Route::patch('disciplines/{discipline}/units/{unit}/subunits', [SubunitController::class, 'update'])->name('disciplines.units.subunits.update');
+    Route::delete('disciplines/{discipline}/units/{unit}/subunits/{subunit}', [SubunitController::class, 'destroy'])->name('disciplines.units.subunits.destroy');
+
     // Rosters
     Route::get('rosters', [RosterController::class, 'index'])->name('rosters.index');
     Route::get('rosters/create/{discipline}', [RosterController::class, 'create'])->name('rosters.create');
@@ -37,6 +43,4 @@ Route::middleware('auth')->group(function () {
     Route::get('rosters/{roster}', [RosterController::class, 'show'])->name('rosters.show');
     Route::patch('rosters/{roster}/reshuffle', [RosterController::class, 'reshuffle'])->name('rosters.reshuffle');
     Route::post('/rosters/{roster}/shuffle', [RosterController::class, 'shuffle'])->name('rosters.shuffle');
-
-
 });

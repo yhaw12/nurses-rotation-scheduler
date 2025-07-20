@@ -4,38 +4,10 @@
 <div class="container mx-auto px-4 py-6 space-y-8 h-full overflow-auto">
     <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">Roster System Dashboard</h1>
 
-    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Filter Rosters</h2>
-        <div class="flex flex-col sm:flex-row gap-4">
-            <input type="text" id="searchInput" placeholder="Search by discipline or creator..." class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <select id="disciplineFilter" class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">All Disciplines</option>
-                <option value="Registered General Nurses (RGN)">RGN</option>
-                <option value="Midwives">Midwives</option>
-                <option value="Public Health Nurses">Public Health Nurses</option>
-            </select>
-            <select id="dateFilter" class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">All Dates</option>
-                <option value="active">Active Rosters</option>
-                <option value="expired">Expired Rosters</option>
-            </select>
-        </div>
-    </div>
-    
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Total Rosters</h2>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $rosters->count() ?? 0 }}</p>
-        </div>
-        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Disciplines</h2>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ \App\Models\Discipline::count() }}</p>
-        </div>
-        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Active Students</h2>
-            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $activeStudents ?? 0 }}</p>
-        </div>
-    </div>
+
+
+
+    {{-- CARDS FOR DISCIPLINES --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <a href="{{ route('rosters.create', ['discipline' => 'rgn']) }}" class="block bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-200 transform hover:-translate-y-1">
             <div class="flex flex-col items-center">
@@ -65,11 +37,47 @@
             </div>
         </a>
     </div>
-    
-    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Roster Distribution by Discipline</h2>
-        <canvas id="rosterChart" height="200"></canvas>
+
+
+
+    {{-- INFO --}}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Total Rosters</h2>
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $rosters->count() ?? 0 }}</p>
+        </div>
+        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Disciplines</h2>
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ \App\Models\Discipline::count() }}</p>
+        </div>
+        <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Active Students</h2>
+            <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $activeStudents ?? 0 }}</p>
+        </div>
     </div>
+
+    
+    {{-- FILTER --}}
+    <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Filter Rosters</h2>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <input type="text" id="searchInput" placeholder="Search by discipline, creator, or student..." class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Search rosters">
+            <select id="disciplineFilter" class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by discipline">
+                <option value="">All Disciplines</option>
+                <option value="Registered General Nurses (RGN)">RGN</option>
+                <option value="Midwives">Midwives</option>
+                <option value="Public Health Nurses">Public Health Nurses</option>
+            </select>
+            <select id="dateFilter" class="w-full sm:w-1/3 p-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500" aria-label="Filter by date">
+                <option value="">All Dates</option>
+                <option value="active">Active Rosters</option>
+                <option value="expired">Expired Rosters</option>
+            </select>
+        </div>
+    </div>
+    
+    
+    {{-- TABLE --}}
     <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Existing Rosters</h2>
@@ -99,7 +107,7 @@
                         @foreach($rosters->take(10) as $roster)
                             <tr class="hover:bg-blue-50 dark:hover:bg-gray-600 transition duration-200">
                                 <td class="border p-2 text-gray-800 dark:text-gray-200">{{ $roster->id }}</td>
-                                <td class="border p-2 text-gray-800 dark:text-gray-200">{{ $roster->discipline->name }}</td>
+                                <td class="border p-2 text-gray-800 dark:text-gray-200">{{ $roster->discipline->name ?? 'Unknown' }}</td>
                                 <td class="border p-2 text-gray-800 dark:text-gray-200">
                                     {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') }} - 
                                     {{ \Carbon\Carbon::parse($roster->end_date)->format('d/m/Y') }}
@@ -133,99 +141,58 @@
 @push('scripts')
 <script defer>
 document.addEventListener('DOMContentLoaded', () => {
-    const ctx = document.getElementById('rosterChart')?.getContext('2d');
-    if (ctx && window.Chart) {
-        const rosterChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                labels: ['RGN', 'Midwives', 'Public Health Nurses'],
-                datasets: [{
-                    data: [
-                        @php
-                            echo $rosters->where('discipline.name', 'Registered General Nurses (RGN)')->count() ?? 0;
-                        @endphp,
-                        @php
-                            echo $rosters->where('discipline.name', 'Midwives')->count() ?? 0;
-                        @endphp,
-                        @php
-                            echo $rosters->where('discipline.name', 'Public Health Nurses')->count() ?? 0;
-                        @endphp
-                    ],
-                    backgroundColor: ['#3B82F6', '#10B981', '#EF4444'],
-                    borderColor: ['#1E40AF', '#047857', '#B91C1C'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: {
-                            font: { family: 'Inter' },
-                            color: document.documentElement.classList.contains('dark') ? '#FFFFFF' : '#1F2937',
-                            boxWidth: 20,
-                            padding: 20
-                        }
-                    }
-                }
-            }
-        });
-
-        document.getElementById('theme-toggle')?.addEventListener('click', () => {
-            const isDark = document.documentElement.classList.contains('dark');
-            rosterChart.options.plugins.legend.labels.color = isDark ? '#FFFFFF' : '#1F2937';
-            rosterChart.update();
-        });
-    } else if (!window.Chart) {
-        console.error('Chart.js is not loaded.');
-    }
-
     const searchInput = document.getElementById('searchInput');
     const disciplineFilter = document.getElementById('disciplineFilter');
     const dateFilter = document.getElementById('dateFilter');
     const rosterTable = document.getElementById('rosterTable');
 
+    let debounceTimeout;
     function filterTable() {
-        const searchTerm = searchInput?.value.toLowerCase() || '';
-        const discipline = disciplineFilter?.value || '';
-        const date = dateFilter?.value || '';
-        const rows = rosterTable?.querySelectorAll('tbody tr') || [];
-        const today = new Date();
-        rows.forEach(row => {
-            const disciplineText = row.cells[1]?.textContent.toLowerCase() || '';
-            const dateRange = row.cells[2]?.textContent || '';
-            const creator = row.cells[3]?.textContent.toLowerCase() || '';
-            const endDateParts = dateRange.split(' - ')[1]?.split('/') || [];
-            const endDate = endDateParts.length === 3 ? new Date(`${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}`) : null;
-            let show = true;
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+            const discipline = disciplineFilter?.value.toLowerCase() || '';
+            const date = dateFilter?.value || '';
+            const rows = rosterTable?.querySelectorAll('tbody tr') || [];
+            const today = new Date();
+            const rosterStudents = allRows.reduce((acc, roster) => {
+                acc[roster.id] = roster.student_names?.map(name => name.toLowerCase().trim()) || [];
+                return acc;
+            }, {});
 
-            if (searchTerm && !disciplineText.includes(searchTerm) && !creator.includes(searchTerm)) {
-                show = false;
-            }
-            if (discipline && !disciplineText.includes(discipline.toLowerCase())) {
-                show = false;
-            }
-            if (date === 'active' && endDate && endDate < today) {
-                show = false;
-            }
-            if (date === 'expired' && endDate && endDate >= today) {
-                show = false;
-            }
+            rows.forEach(row => {
+                const rosterId = row.cells[0]?.textContent.trim() || '';
+                const disciplineText = row.cells[1]?.textContent.toLowerCase().trim() || '';
+                const creator = row.cells[3]?.textContent.toLowerCase().trim() || '';
+                const dateRange = row.cells[2]?.textContent || '';
+                const endDateParts = dateRange.split(' - ')[1]?.split('/') || [];
+                const endDate = endDateParts.length === 3 ? new Date(`${endDateParts[2]}-${endDateParts[1]}-${endDateParts[0]}`) : null;
+                let show = true;
 
-            row.style.display = show ? '' : 'none';
-        });
+                if (searchTerm) {
+                    const students = rosterStudents[rosterId] || [];
+                    if (!disciplineText.includes(searchTerm) && !creator.includes(searchTerm) && !students.some(student => student.includes(searchTerm))) {
+                        show = false;
+                    }
+                }
+                if (discipline && !disciplineText.includes(discipline)) {
+                    show = false;
+                }
+                if (date === 'active' && endDate && endDate < today) {
+                    show = false;
+                }
+                if (date === 'expired' && endDate && endDate >= today) {
+                    show = false;
+                }
+
+                row.style.display = show ? '' : 'none';
+            });
+        }, 300);
     }
 
-    if (searchInput) {
-        searchInput.addEventListener('input', filterTable);
-    }
-    if (disciplineFilter) {
-        disciplineFilter.addEventListener('change', filterTable);
-    }
-    if (dateFilter) {
-        dateFilter.addEventListener('change', filterTable);
-    }
+    if (searchInput) searchInput.addEventListener('input', filterTable);
+    if (disciplineFilter) disciplineFilter.addEventListener('change', filterTable);
+    if (dateFilter) dateFilter.addEventListener('change', filterTable);
 
     let sortDirection = {};
     function sortTable(colIndex) {
@@ -236,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
         sortDirection[key] = !sortDirection[key];
 
         rows.sort((a, b) => {
-            let aValue = a.cells[colIndex]?.textContent || '';
-            let bValue = b.cells[colIndex]?.textContent || '';
+            let aValue = a.cells[colIndex]?.textContent.trim() || '';
+            let bValue = b.cells[colIndex]?.textContent.trim() || '';
             if (colIndex === 0) {
                 aValue = parseInt(aValue) || 0;
                 bValue = parseInt(bValue) || 0;
@@ -298,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('exportCsv')?.addEventListener('click', exportToCSV);
 
     let visibleRows = 10;
-    const allRows = @json($rosters ?? []);
+    const allRows = @json($allRows);
     const showMoreBtn = document.getElementById('showMore');
     if (showMoreBtn) {
         showMoreBtn.addEventListener('click', () => {
@@ -314,9 +281,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.className = 'hover:bg-blue-50 dark:hover:bg-gray-600 transition duration-200';
                 row.innerHTML = `
                     <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.id}</td>
-                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.discipline?.name || ''}</td>
+                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.discipline_name || 'Unknown'}</td>
                     <td class="border p-2 text-gray-800 dark:text-gray-200">${new Date(roster.start_date).toLocaleDateString('en-GB')} - ${new Date(roster.end_date).toLocaleDateString('en-GB')}</td>
-                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.createdBy?.name || 'Unknown'}</td>
+                    <td class="border p-2 text-gray-800 dark:text-gray-200">${roster.created_by_name || 'Unknown'}</td>
                     <td class="border p-2"><span class="${status === 'Active' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}">${status}</span></td>
                     <td class="border p-2"><a href="/rosters/${roster.id}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View</a></td>
                 `;
