@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.icon-container svg {
+    width: inherit !important;
+    height: inherit !important;
+}

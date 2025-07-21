@@ -24,10 +24,10 @@
 <div class="a4-container">
     <div class="print-content">
         <div class="text-center mb-1 font-bold underline">
-            <h2 class="text-xl text-gray-800 dark:text-white">
+            <h2 class="text-lg text-gray-800 dark:text-white">
                 ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }}
             </h2>
-            <div class="text-xl text-gray-800 dark:text-white">
+            <div class="text-lg text-gray-800 dark:text-white">
                 (FIFTY-TWO WEEKS) STARTING FROM
                 {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') ?? 'N/A' }}
                 TO
@@ -35,16 +35,6 @@
                 KASOA POLYCLINIC
             </div>
         </div>
-        {{-- @if (config('app.debug'))
-            <div class="mb-4 p-4 bg-yellow-100 dark:bg-yellow-900 text-gray-800 dark:text-gray-200">
-                <h3 class="font-bold">Debug: Student Names</h3>
-                <ul>
-                    @foreach($studentGroups as $name)
-                        <li>{{ $name }} (Raw: {{ base64_encode($name) }})</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif --}}
         <table class="w-full border-collapse text-sm" style="table-layout: fixed;">
             <colgroup>
                 <col style="width: 20%;">
@@ -73,7 +63,7 @@
                             @if($unitIndex === 0 && $loopIndex === 0)
                                 <td class="border border-gray-300 dark:border-gray-600 p-1 mt-4 align-top" rowspan="{{ $totalRows }}">
                                     @foreach($studentGroups as $name)
-                                        <div class="uppercase mb-0.5 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $name }}</div>
+                                        <div class="uppercase mb-2 px-2 text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $name }}</div>
                                     @endforeach
                                 </td>
                             @endif

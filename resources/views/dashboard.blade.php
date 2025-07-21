@@ -5,8 +5,6 @@
     <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">Roster System Dashboard</h1>
 
 
-
-
     {{-- CARDS FOR DISCIPLINES --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <a href="{{ route('rosters.create', ['discipline' => 'rgn']) }}" class="block bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-200 transform hover:-translate-y-1">
@@ -51,7 +49,7 @@
             <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ \App\Models\Discipline::count() }}</p>
         </div>
         <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm transition duration-200 hover:shadow-xl">
-            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Active Students</h2>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Active Rotation Staffs</h2>
             <p class="text-3xl font-bold text-blue-600 dark:text-blue-400">{{ $activeStudents ?? 0 }}</p>
         </div>
     </div>

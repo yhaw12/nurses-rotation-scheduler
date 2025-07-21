@@ -10,10 +10,12 @@
         @media (max-width: 768px) {
             .sidebar.expanded {
                 transform: translateX(0);
+                opacity: 1;
                 z-index: 30;
             }
             .sidebar {
                 z-index: 30;
+                opacity: 0;
             }
         }
         @media print {
@@ -87,6 +89,14 @@
         footer {
             flex-shrink: 0;
         }
+        /* Footer animation */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white font-sans">
@@ -98,7 +108,7 @@
     @auth
         <div class="flex h-screen relative">
             <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
-            <aside class="sidebar w-64 bg-gray-100 dark:bg-gray-800 shadow-md h-screen fixed top-0 left-0 transform -translate-x-full md:translate-x-0 md:static z-30 transition-transform duration-300 ease-in-out">
+            <aside class="sidebar w-64 h-screen fixed top-0 left-0 transform -translate-x-full md:translate-x-0 md:static z-30 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 shadow-md transition-transform duration-300 ease-in-out transition-opacity duration-300 ease-in-out">
                 @include('partials.sidebar')
             </aside>
             <div class="flex-1 flex flex-col min-h-0">
@@ -134,26 +144,21 @@
                 <main class="flex-1 overflow-y-auto container mx-auto px-4 py-6 bg-gray-100 dark:bg-gray-900">
                     @yield('content')
                 </main>
-
-                <footer class="bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 text-white py-4 h-10">
-                <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-                    <p class="text-sm md:text-base"> &copy; {{ now()->year }} <span class="font-semibold">Blankson I.T Solutions</span>. All rights reserved. </p>
-                    {{-- <a href="https://blanksonit.com" class="mt-2 md:mt-0 inline-block bg-white bg-opacity-20 hover:bg-opacity-40 transition rounded-full px-4 py-1 text-sm font-medium" target="_blank" rel="noopener">
-                        Designed by Blankson I.T Solutions
-                    </a> --}}
-                </div>
+                <footer class="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-950 dark:to-blue-900 py-4 min-h-[60px] shadow-md rounded-t-xl animate-fade-in dark:border-t-white dark:border-t-12 border-t-12 border-t-blue-900">
+                    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 py-2">
+                        <div class="flex flex-col sm:flex-row items-center gap-2 text-blue-800 dark:text-gray-100">
+                            <p class="text-base">© {{ now()->year }} <a href="tel:233543620923" class="text-lg font-bold text-blue-200 dark:text-blue-400 hover:text-blue-300 dark:hover:text-blue-300 hover:underline hover:scale-105 transition-all duration-300 ease-in-out" aria-label="Call Blankson I.T Solutions">Blankson I.T Solutions</a>. All rights reserved.</p>
+                        </div>
+                    </div>
                 </footer>
-
             </div>
         </div>
-        
     @endauth
 
     @guest
         <main class="flex-1 overflow-y-auto container mx-auto px-4 py-6 bg-gray-100 dark:bg-gray-900">
             @yield('content')
         </main>
-        
     @endguest
 
     <!-- Scripts -->
@@ -221,8 +226,7 @@
                 // Intercept link clicks for navigation
                 document.querySelectorAll('a:not([href^="#"])').forEach(link => {
                     link.addEventListener('click', (e) => {
-                        // Skip external links or download links
-                        if (link.href.includes(window.location.host) && !link.hasAttribute('download')) {
+                        if (link.href.includes(window.location.host) && !link.hasAttribute('download') && !link.href.startsWith('tel:')) {
                             showLoading();
                         }
                     });
@@ -242,7 +246,7 @@
                     setTimeout(() => {
                         originalPrint();
                         hideLoading();
-                    }, 500); // Brief delay to show overlay
+                    }, 500);
                 };
 
                 // Enhance fetch to show/hide loading overlay
