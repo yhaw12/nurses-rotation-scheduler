@@ -21,39 +21,27 @@
     $dateIndex = 0;
 @endphp
 <style>
-    .wrap-name {
-        overflow-wrap: break-word;
-        white-space: normal;
-        hyphens: auto;
-        max-width: 100%;
-    }
-     /* .unit-group {
-        break-inside: avoid;
-        page-break-inside: avoid;
-        break-before: auto;
-    } */
 </style>
 <div class="a4-container">
     <div class="print-content">
-        <div class="text-center mb-1 font-bold underline">
-            <h2 class="text-xl text-gray-800 dark:text-white">
-                ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }}
-            </h2>
-            <div class="text-xl text-gray-800 dark:text-white">
-                (FIFTY-TWO WEEKS) STARTING FROM
-                {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') ?? 'N/A' }}
-                TO
-                {{ \Carbon\Carbon::parse($roster->end_date)->format('d/m/Y') ?? 'N/A' }}
-                KASOA POLYCLINIC
-            </div>
-        </div>
+       <div class="text-center mb-4 font-bold underline">
+  <h2 class="text-xl text-gray-800 dark:text-white">
+    ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }} —  
+    (FIFTY‑TWO WEEKS) STARTING FROM
+    {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') ?? 'N/A' }}
+    TO
+    {{ \Carbon\Carbon::parse($roster->end_date)->format('d/m/Y') ?? 'N/A' }},
+    KASOA POLYCLINIC
+  </h2>
+</div>
+
         <table class="w-full border-collapse text-sm" style="table-layout: fixed;">
             <colgroup>
-                <col style="width: 20%;">
+                <col style="width: 22%;">
                 <col style="width: 10%;">
-                <col style="width: 15%;">
-                <col style="width: 15%;">
-                <col style="width: 20%;">
+                <col style="width: 12%;">
+                <col style="width: 12%;">
+                <col style="width: 24%;">
                 <col style="width: 10%;">
                 <col style="width: 10%;">
             </colgroup>
@@ -73,7 +61,7 @@
                     @foreach($unit->subunits as $loopIndex => $sub)
                         <tr class="h-6 unit-group">
                             @if($unitIndex === 0 && $loopIndex === 0)
-                                <td class="border border-gray-300 dark:border-gray-600 p-1 mt-4 align-top wrap-name" rowspan="{{ $totalRows }}">
+                                <td class="border border-gray-300 dark:border-gray-600 p-1 mt-12 align-top wrap-name" rowspan="{{ $totalRows }}">
                                     @foreach($studentGroups as $name)
                                         <div class="uppercase mb-2 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $name }}</div>
                                     @endforeach

@@ -28,7 +28,7 @@
     .print-content table {
         width: 100% !important;
         border-collapse: collapse !important;
-        table-layout: fixed !important; /* Enforce colgroup widths */
+        table-layout: fixed !important; 
     }
     .print-content th, .print-content td {
         border: 1px solid #000 !important;
@@ -56,6 +56,6 @@
     }
     @page {
         size: A4 landscape;
-        margin: 0.2cm;
+        margin: 0.1cm;
     }
 }

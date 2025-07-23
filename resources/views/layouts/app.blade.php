@@ -20,7 +20,10 @@
       main { width:100% !important; padding:0 !important; margin:0 !important; overflow:visible !important; }
       .a4-container { width:1084px !important; height:760px !important; margin:0 40px !important; padding:0 !important; overflow:visible !important; }
       .print-content { width:100% !important; height:auto !important; overflow:visible !important; }
-      @page { size:A4 landscape; margin:1cm; }
+      @page { size:A4 landscape; margin: 2cm;  }
+      thead { display: table-header-group; }
+      table { page-break-inside: auto; }
+      .unit-group { page-break-inside: avoid; }
     }
 
     /* LOADING OVERLAY & DUAL‑RING LOADER */
@@ -76,7 +79,7 @@
                 </svg>
               </button>
               {{-- Page Title --}}
-              <div class="text-lg font-semibold text-gray-800 dark:text-gray-100 uppercase">
+              <div class="text-sm font-semibold text-gray-800 dark:text-gray-100 uppercase">
                 {{ ucfirst(request()->segment(1) ?? 'Dashboard') }}
               </div>
               <div class="flex-1"></div>
