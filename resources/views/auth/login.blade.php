@@ -3,12 +3,19 @@
 @section('content')
 <style>
     body {
-        /* background-image: url('{{ asset('images/nurses.jpeg') }}'); */
+        min-height: 100vh;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-image: url('{{ asset('images/login-img.png') }}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
+
     body::before {
         content: '';
         position: fixed;
@@ -16,16 +23,43 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.1); /* Subtle overlay for readability */
+        background: rgba(0, 0, 0, 0.3);
         z-index: -1;
     }
+
     body.dark::before {
-        background: rgba(0, 0, 0, 0.4); /* Darker overlay in dark mode */
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Enhanced blur for the form container */
+    .form-container {
+        backdrop-filter: blur(10px); /* Increased blur intensity */
+        -webkit-backdrop-filter: blur(10px); /* Safari support */
+        background: rgba(255, 255, 255, 0.8); /* Light mode background with opacity */
+    }
+
+    .dark .form-container {
+        background: rgba(30, 30, 30, 0.8); /* Dark mode background with opacity */
+    }
+
+    /* Ensure input fields and text remain clear */
+    .form-container input,
+    .form-container label,
+    .form-container a,
+    .form-container p,
+    .form-container span {
+        backdrop-filter: none; /* No blur on form elements */
+        background: transparent; /* Maintain input background */
     }
 </style>
 
 <div class="container mx-auto px-4 py-6 max-w-md min-h-screen flex items-center justify-center">
-    <div class="bg-white/60 dark:bg-gray-800/60 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+    <div class="p-6 rounded-lg shadow-lg form-container">
         <h1 class="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">Login</h1>
         <form method="POST" action="{{ route('login') }}" class="space-y-6">
             @csrf

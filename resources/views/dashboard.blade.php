@@ -2,41 +2,32 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-6 space-y-8 h-full overflow-auto">
-    <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">Roster System Dashboard</h1>
+    <h1 class="text-4xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">Kasoa Polyclinic Roster System Dashboard</h1>
 
-
-    {{-- CARDS FOR DISCIPLINES --}}
+   {{-- CARDS FOR DISCIPLINES --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <a href="{{ route('rosters.create', ['discipline' => 'rgn']) }}" class="block bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-200 transform hover:-translate-y-1">
             <div class="flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <span class="text-4xl text-blue-600 dark:text-blue-400 mb-4">✚</span>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">RGN</h2>
                 <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Registered General Nurses</p>
             </div>
         </a>
         <a href="{{ route('rosters.create', ['discipline' => 'midwives']) }}" class="block bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-200 transform hover:-translate-y-1">
             <div class="flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
+                <span class="text-4xl text-blue-600 dark:text-blue-400 mb-4">👶</span>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Midwives</h2>
                 <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Midwives</p>
             </div>
         </a>
         <a href="{{ route('rosters.create', ['discipline' => 'public-health-nurses']) }}" class="block bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm hover:bg-blue-100 dark:hover:bg-gray-700 transition duration-200 transform hover:-translate-y-1">
             <div class="flex flex-col items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600 dark:text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+                <span class="text-4xl text-blue-600 dark:text-blue-400 mb-4">🌍</span>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">Public Health Nurses</h2>
                 <p class="text-sm text-gray-600 dark:text-gray-300 text-center">Create roster for Public Health Nurses</p>
             </div>
         </a>
     </div>
-
-
 
     {{-- INFO --}}
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -54,7 +45,6 @@
         </div>
     </div>
 
-    
     {{-- FILTER --}}
     <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm mb-8">
         <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Filter Rosters</h2>
@@ -73,8 +63,7 @@
             </select>
         </div>
     </div>
-    
-    
+
     {{-- TABLE --}}
     <div class="bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg shadow-lg backdrop-blur-sm">
         <div class="flex justify-between items-center mb-4">
@@ -98,7 +87,7 @@
                             <th class="border p-2 text-left cursor-pointer" onclick="sortTable(2)">Date Range <span class="sort-icon">↕</span></th>
                             <th class="border p-2 text-left cursor-pointer" onclick="sortTable(3)">Created By <span class="sort-icon">↕</span></th>
                             <th class="border p-2 text-left">Status</th>
-                            <th class="border p-2 text-left">Actions</th>
+                            <th class="border p-2 text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,8 +108,15 @@
                                     @endphp
                                     <span class="{{ $status === 'Active' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">{{ $status }}</span>
                                 </td>
-                                <td class="border p-2">
-                                    <a href="{{ route('rosters.show', $roster) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">View</a>
+                                <td class="border p-2 flex items-center justify-between">
+                                    <a href="{{ route('rosters.show', $roster) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 mr-12">View</a>
+                                    @if(auth()->check() && (auth()->user()->is_admin || auth()->id() === $roster->created_by))
+                                        <form action="{{ route('rosters.destroy', $roster) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this roster?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 ml-2">Delete</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

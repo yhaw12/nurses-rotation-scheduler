@@ -1,7 +1,7 @@
 @media print {
     body {
         margin: 0 !important;
-        font-size: 14pt !important;
+        font-size: 12pt !important;
         overflow: hidden !important;
     }
     .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
@@ -15,7 +15,7 @@
     }
     .a4-container {
         width: 1084px !important;
-        height: 760px !important;
+        height: auto !important;
         margin: 0 40px !important;
         padding: 0 !important;
         overflow: visible !important;
@@ -32,13 +32,13 @@
     }
     .print-content th, .print-content td {
         border: 1px solid #000 !important;
-        padding: 1px !important;
-        font-size: 8pt !important;
+        padding: 1px !important; /* Slightly increased for readability */
+        font-size: 9pt !important; /* Increased from 8pt for clarity */
         vertical-align: top !important;
-        line-height: 1.0 !important;
+        line-height: 1.1 !important; /* Adjusted for better fit */
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        white-space: nowrap !important;
+        white-space: normal !important; 
     }
     .print-content table table {
         width: 100% !important;
@@ -58,4 +58,5 @@
         size: A4 landscape;
         margin: 0.1cm;
     }
+    
 }
