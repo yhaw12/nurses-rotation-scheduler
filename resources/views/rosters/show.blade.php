@@ -26,13 +26,13 @@
     <div class="print-content">
         <div class="text-center mb-1 font-bold underline">
         <h2 class="text-xl text-gray-800 dark:text-white">
-            ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }} —  
+            ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }} 
             (FIFTY‑TWO WEEKS) STARTING FROM
             {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') ?? 'N/A' }}
                 TO
                 {{ \Carbon\Carbon::parse($roster->end_date)->format('d/m/Y') ?? 'N/A' }},
                 KASOA POLYCLINIC
-            </h2>
+        </h2>
        </div>
 
         <table class="w-full border-collapse text-sm" style="table-layout: fixed;">
@@ -63,7 +63,7 @@
                             @if($unitIndex === 0 && $loopIndex === 0)
                                 <td class="border border-gray-300 dark:border-gray-600 p-1 align-top wrap-name" rowspan="{{ $totalRows }}">
                                     @foreach($studentGroups as $name)
-                                        <div class="uppercase mb-2 px-2 text-sm font-semibold text-gray-900 dark:text-gray-100">{{ $name }}</div>
+                                        <div class="uppercase mb-2 px-2 text-sm font-semibold ">{{ $name }}</div>
                                     @endforeach
                                 </td>
                             @endif
@@ -75,7 +75,7 @@
                                             @foreach($unit->subunits as $s)
                                                 @php $dates = $dateSequence[$dateIndex++] ?? ['duration_weeks' => 0]; @endphp
                                                 <tr class="h-6">
-                                                    <td class="text-center text-gray-900 dark:text-gray-100">
+                                                    <td class="text-center text-gray-800 dark:text-white">
                                                         {{ strtoupper($dates['duration_weeks'] . ' ' . ($dates['duration_weeks'] == 1 ? 'WEEK' : 'WEEKS')) }}
                                                     </td>
                                                 </tr>
@@ -90,7 +90,7 @@
                                             @php $tempIndex = $dateIndex - $unit->subunits->count(); @endphp
                                             @foreach($unit->subunits as $s)
                                                 <tr class="h-6">
-                                                    <td class="text-center text-gray-900 dark:text-gray-100">{{ $dateSequence[$tempIndex]['start_date'] ?? '-' }}</td>
+                                                    <td class="text-center text-gray-800 dark:text-white">{{ $dateSequence[$tempIndex]['start_date'] ?? '-' }}</td>
                                                 </tr>
                                                 @php $tempIndex++; @endphp
                                             @endforeach
@@ -104,7 +104,7 @@
                                             @php $tempIndex = $dateIndex - $unit->subunits->count(); @endphp
                                             @foreach($unit->subunits as $s)
                                                 <tr class="h-6">
-                                                    <td class="text-center text-gray-900 dark:text-gray-100">{{ $dateSequence[$tempIndex]['end_date'] ?? '-' }}</td>
+                                                    <td class="text-center text-gray-800 dark:text-white">{{ $dateSequence[$tempIndex]['end_date'] ?? '-' }}</td>
                                                 </tr>
                                                 @php $tempIndex++; @endphp
                                             @endforeach
@@ -114,9 +114,9 @@
                                 <td class="border border-gray-300 dark:border-gray-600 p-1 align-top" rowspan="{{ $unit->subunits->count() }}">
                                     <table class="w-full border-collapse">
                                         <tbody>
-                                            <tr class="h-6 underline"><td class="text-center font-bold text-gray-900 dark:text-gray-100">{{ strtoupper($unit->name) }}</td></tr>
+                                            <tr class="h-6 underline"><td class="text-center font-bold text-gray-800 dark:text-white">{{ strtoupper($unit->name) }}</td></tr>
                                             @foreach($unit->subunits as $s)
-                                                <tr class="h-6"><td class="text-center text-gray-900 dark:text-gray-100">{{ strtoupper($s->name) }}</td></tr>
+                                                <tr class="h-6"><td class="text-center text-gray-800 dark:text-white">{{ strtoupper($s->name) }}</td></tr>
                                             @endforeach
                                         </tbody>
                                     </table>

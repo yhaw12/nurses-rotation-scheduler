@@ -1,51 +1,63 @@
 @media print {
-    body {
+      body {
         margin: 0 !important;
         font-size: 12pt !important;
         overflow: hidden !important;
-    }
-    .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle {
+        background-color: #ffffff !important; /* Force light background */
+        color: #000000 !important; /* Force black text */
+      }
+      .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay, footer {
         display: none !important;
-    }
-    main {
+      }
+      main {
         width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
         overflow: visible !important;
-    }
-    .a4-container {
+        background-color: #ffffff !important; /* Ensure light background */
+        color: #000000 !important; /* Ensure black text */
+      }
+      .a4-container {
         width: 1084px !important;
-        height: auto !important;
+        height: 760px !important;
         margin: 0 40px !important;
         padding: 0 !important;
         overflow: visible !important;
-    }
-    .print-content {
+        background-color: #ffffff !important; /* Force light background */
+        color: #000000 !important; /* Force black text */
+      }
+      .print-content {
         width: 100% !important;
         height: auto !important;
         overflow: visible !important;
-    }
-    .print-content table {
+        background-color: #ffffff !important; /* Force light background */
+        color: #000000 !important; /* Force black text */
+      }
+      .print-content table {
         width: 100% !important;
         border-collapse: collapse !important;
-        table-layout: fixed !important; 
-    }
-    .print-content th, .print-content td {
-        border: 1px solid #000 !important;
+        table-layout: fixed !important;
+        background-color: #ffffff !important; /* Force light background */
+      }
+      .print-content th, .print-content td {
+        border: 1px solid #000000 !important;
         padding: 1px !important; /* Slightly increased for readability */
         font-size: 9pt !important; /* Increased from 8pt for clarity */
         vertical-align: top !important;
         line-height: 1.1 !important; /* Adjusted for better fit */
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        white-space: normal !important; 
-    }
-    .print-content table table {
+        white-space: normal !important;
+        background-color: #ffffff !important; /* Force light background */
+        color: #000000 !important; /* Force black text */
+      }
+      .print-content table table {
         width: 100% !important;
         border: none !important;
         table-layout: fixed !important;
-    }
-    .print-content table table td {
+        background-color: #ffffff !important; /* Force light background */
+      }
+      .print-content table table td {
         border: none !important;
         padding: 0 !important;
         font-size: 8pt !important;
@@ -53,10 +65,14 @@
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         white-space: nowrap !important;
-    }
-    @page {
+        background-color: #ffffff !important; /* Force light background */
+        color: #000000 !important; /* Force black text */
+      }
+
+      .a4-container .print-content div h2{ color: #000000 !important; }
+      @page {
         size: A4 landscape;
         margin: 0.1cm;
+        background-color: #ffffff !important; /* Force light background */
+      }
     }
-    
-}

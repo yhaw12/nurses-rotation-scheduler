@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Roster System</title>
+  <title> KPC ROSTER SYSTEM</title>
   @vite(['resources/css/app.css', 'resources/js/app.js'])
+  <link rel="icon" type="image/x-icon" href="{{ asset('ghs-logo.png') }}">
   <style>
     /* MOBILE SIDEBAR CONTROL */
     @media (max-width: 768px) {
@@ -15,35 +16,55 @@
 
     /* PRINT STYLES */
     @media print {
-      body { margin: 0 !important; overflow: hidden !important; }
-      .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay, footer { display: none !important; }
-      main { width: 100% !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; }
-      .a4-container { width: 1084px !important; height: 760px !important; margin: 0 40px !important; padding: 0 !important; overflow: visible !important; }
-      .print-content { width: 100% !important; height: auto !important; overflow: visible !important; }
+      body { margin: 0 !important; overflow: hidden !important; background-color: #ffffff !important; color: #000000 !important; }
+      .sidebar, header, #sidebar-overlay, #mobile-menu-button, #theme-toggle, .print-hidden, #loading-overlay, footer { display: none !important; color: #000000 !important; }
+      main { width: 100% !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; background-color: #ffffff !important;}
+      .a4-container { width: 1084px !important; height: 760px !important; margin: 0 40px !important; padding: 0 !important; overflow: visible !important; background-color: #ffffff !important; color: #000000 !important;}
+      .print-content { width: 100% !important; height: auto !important; overflow: visible !important; background-color: #ffffff !important; color: #000000 !important;}
+      .print-content table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        table-layout: fixed !important;
+        background-color: #ffffff !important; 
+      }
+      .print-content th, .print-content td {
+        border: 1px solid #000000 !important;
+        padding: 1px !important; 
+        font-size: 9pt !important; 
+        vertical-align: top !important;
+        line-height: 1.1 !important; 
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: normal !important;
+        background-color: #ffffff !important; 
+        color: #000000 !important; 
+      }
+      .print-content table table {
+        width: 100% !important;
+        border: none !important;
+        table-layout: fixed !important;
+        background-color: #ffffff !important; 
+      }
+      .print-content table table td {
+        border: none !important;
+        padding: 0 !important;
+        font-size: 8pt !important;
+        line-height: 1.0 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      .a4-container .print-content div h2 { color: #000000 !important; } /* Ensure h2 is always black */
       @page { size: A4 landscape; margin: 1cm; }
     }
 
     /* LOADING OVERLAY & DUAL-RING LOADER */
-    #loading-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 9999; transition: opacity .3s ease;
-    }
+    #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 9999; transition: opacity .3s ease;}
     #loading-overlay.hidden { display: none; }
-    .loader {
-      width: 64px; height: 64px;
-      display: inline-block;
-      position: relative;
-    }
-    .loader:after {
-      content: ""; display: block;
-      width: 48px; height: 48px; margin: 8px;
-      border-radius: 50%;
-      border: 6px solid #f3f3f3;
-      border-top-color: #3B82F6; border-right-color: #2563EB;
-      animation: spin .8s linear infinite;
-    }
+    .loader {width: 64px; height: 64px; display: inline-block; position: relative;}
+    .loader:after {content: ""; display: block; width: 48px; height: 48px; margin: 8px; border-radius: 50%; border: 6px solid #f3f3f3; border-top-color: #3B82F6; border-right-color: #2563EB; animation: spin .8s linear infinite;}
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* SPACERS & FOOTER ANIMATION */
@@ -54,6 +75,7 @@
     .animate-fade-in { animation: fade-in .5s ease-in-out; }
   </style>
 </head>
+
 <body class="{{ auth()->check() ? 'bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white' : '' }} font-sans">
   <!-- Loading Overlay -->
   <div id="loading-overlay" class="hidden">
