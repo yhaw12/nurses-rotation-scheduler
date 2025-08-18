@@ -100,7 +100,7 @@
     </nav>
 
     <!-- Logout -->
-    <div class="p-4 mt-auto font-semibold text-lg" style="margin-bottom: 2rem;">
+    <div class="p-4 mt-auto font-semibold text-lg" style="margin-bottom: -1rem;">
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit" aria-label="Logout" class="flex items-center w-full px-4 py-4 rounded-lg text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50 hover:scale-105 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500">

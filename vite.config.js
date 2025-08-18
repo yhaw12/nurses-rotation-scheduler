@@ -1,18 +1,11 @@
-const defaultTheme = require('tailwindcss/defaultTheme');
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
-module.exports = {
-    darkMode: 'class',
-    content: [
-        './resources/views/**/*.blade.php',
-        './resources/js/**/*.js',
-        './resources/**/*.vue',
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: true,
+        }),
     ],
-    theme: {
-        extend: {
-            fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
-            },
-        },
-    },
-    plugins: [],
-}
+});

@@ -27,7 +27,7 @@
         <div class="text-center mb-1 font-bold underline">
         <h2 class="text-xl text-gray-800 dark:text-white">
             ROSTER FOR {{ strtoupper($roster->discipline->name ?? 'N/A') }} 
-            (FIFTY‑TWO WEEKS) STARTING FROM
+            (FIFTY‑TWO WEEKS) ROTATION STAFFS STARTING FROM
             {{ \Carbon\Carbon::parse($roster->start_date)->format('d/m/Y') ?? 'N/A' }}
                 TO
                 {{ \Carbon\Carbon::parse($roster->end_date)->format('d/m/Y') ?? 'N/A' }},
@@ -52,7 +52,7 @@
                     <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">START DATE</th>
                     <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">END DATE</th>
                     <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">UNITS</th>
-                    <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">SIGN</th>
+                    <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">SIGN BY I.C.</th>
                     <th class="border border-gray-300 dark:border-gray-600 p-1 text-gray-800 dark:text-gray-200">REMARKS</th>
                 </tr>
             </thead>

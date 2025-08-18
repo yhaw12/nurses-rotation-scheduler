@@ -42,7 +42,7 @@
       .print-content th, .print-content td {
         border: 1px solid #000000 !important;
         padding: 1px !important; /* Slightly increased for readability */
-        font-size: 9pt !important; /* Increased from 8pt for clarity */
+        font-size: 12pt !important; /* Increased from 8pt for clarity */
         vertical-align: top !important;
         line-height: 1.1 !important; /* Adjusted for better fit */
         overflow: hidden !important;
@@ -60,7 +60,7 @@
       .print-content table table td {
         border: none !important;
         padding: 0 !important;
-        font-size: 8pt !important;
+        font-size: 12pt !important;
         line-height: 1.0 !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;

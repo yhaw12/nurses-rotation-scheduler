@@ -146,7 +146,8 @@ class RosterController extends Controller
             $discipline = $roster->discipline()->with('units.subunits')->first();
             $units = $discipline->units;
 
-            $students = $roster->assignments()->pluck('student_name')->unique()->values();
+            // Changed: Use loaded relation (models) to get decrypted names via accessor
+            $students = $roster->assignments->pluck('student_name')->unique()->values();
             if ($students->isEmpty()) {
                 return response()->json(['success' => false, 'message' => 'No students found in roster'], 400);
             }
@@ -188,7 +189,7 @@ class RosterController extends Controller
                         $dates = $dateSequence[$subunitIndex];
                         $assignments[] = [
                             'roster_id'    => $roster->id,
-                            'student_name' => $student, // Let model cast handle encryption
+                            'student_name' => $student, // Now plain text (from accessor); will be encrypted below
                             'unit_id'      => $unit->id,
                             'subunit_id'   => $sub->id,
                             'start_date'   => $dates['start_date'],
@@ -203,17 +204,23 @@ class RosterController extends Controller
                     }
                 }
             }
-            // 🔒 Encrypt every student_name before we insert
-        foreach ($assignments as &$row) {
-            $row['student_name'] = encrypt($row['student_name']);
-        }
-        unset($row);
+            // Encrypt every student_name before insert (now safe since $student is plain)
+            foreach ($assignments as &$row) {
+                try {
+                    $row['student_name'] = encrypt($row['student_name']);
+                } catch (\Exception $e) {
+                    Log::error('Failed to encrypt student name during shuffle: ' . $row['student_name'], ['error' => $e->getMessage()]);
+                    $row['student_name'] = encrypt('Unknown Student'); // Fallback
+                }
+            }
+            unset($row);
             RosterAssignment::insert($assignments);
 
             DB::commit();
             return response()->json(['success' => true, 'message' => 'Roster shuffled successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Shuffle failed', ['error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Failed to shuffle roster: ' . $e->getMessage()], 500);
         }
     }

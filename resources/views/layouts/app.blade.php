@@ -30,7 +30,7 @@
       .print-content th, .print-content td {
         border: 1px solid #000000 !important;
         padding: 1px !important; 
-        font-size: 9pt !important; 
+        font-size: 12pt !important; 
         vertical-align: top !important;
         line-height: 1.1 !important; 
         overflow: hidden !important;
@@ -48,7 +48,7 @@
       .print-content table table td {
         border: none !important;
         padding: 0 !important;
-        font-size: 8pt !important;
+        font-size: 12pt !important;
         line-height: 1.0 !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -121,13 +121,19 @@
         <main class="{{ auth()->check() ? 'bg-gray-100 dark:bg-gray-900' : '' }} flex-1 overflow-y-auto container mx-auto px-4 py-6">
           @yield('content')
         </main>
-        <footer class="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-950 dark:to-blue-900 py-4 min-h-[60px] shadow-md rounded-t-xl animate-fade-in dark:border-t-white dark:border-t-12 border-t-12 border-t-blue-900">
-          <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 py-2">
-            <div class="flex flex-col sm:flex-row items-center gap-2 text-blue-800 dark:text-gray-100">
-              <p class="text-base">© {{ now()->year }} <a href="tel:233543620923" class="text-lg font-bold text-blue-200 dark:text-blue-400 hover:text-blue-300 dark:hover:text-blue-300 hover:underline hover:scale-105 transition-all duration-300 ease-in-out" aria-label="Call Blankson I.T Solutions">Blankson I.T Solutions</a>. All rights reserved.</p>
+        <footer class="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-950 dark:to-blue-900 py-2 min-h-[40px] shadow-sm rounded-t-sm animate-fade-in dark:border-t-white dark:border-t-12 border-t-12 border-t-blue-900">
+          <div class="container mx-auto px-4 flex justify-center items-center text-center">
+            <div class="flex items-center justify-center text-blue-800 dark:text-gray-100">
+              <p class="text-base font-medium">
+                © {{ now()->year }} 
+                <a href="tel:233543620923" class="text-md font-bold text-blue-200 dark:text-blue-400 hover:text-blue-300 dark:hover:text-blue-300 hover:underline hover:scale-105 transition-all duration-300 ease-in-out" aria-label="Call Blankson I.T Solutions">
+                  Blankson I.T Solutions
+                </a>. All rights reserved.
+              </p>
             </div>
           </div>
         </footer>
+
       </div>
     </div>
   @endauth

@@ -130,17 +130,17 @@ class DisciplineSeeder extends Seeder
             'sort_order' => 1,
         ]);
         Subunit::firstOrCreate(['name' => 'Disease Control', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
-        Subunit::firstOrCreate(['name' => 'Comm.oral Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 3]);
-        Subunit::firstOrCreate(['name' => 'Reproduccive Health/FP', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Comm.oral Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Reproductive Health/FP', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 3]);
         Subunit::firstOrCreate(['name' => 'SCHOOL health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 3]);
         Subunit::firstOrCreate(['name' => 'Nursing ADmin', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
         Subunit::firstOrCreate(['name' => 'Nutrition /Rehabilitation', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
         Subunit::firstOrCreate(['name' => 'Occupational Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
         Subunit::firstOrCreate(['name' => 'Environmental Health', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
-        Subunit::firstOrCreate(['name' => 'hiv/ary/ct', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
-        Subunit::firstOrCreate(['name' => 'Health Promotion', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 4]);
+        Subunit::firstOrCreate(['name' => 'hiv/ary/ct', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Health Promotion', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 1]);
         Subunit::firstOrCreate(['name' => 'CWC', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 4]);
-        Subunit::firstOrCreate(['name' => 'CHPS', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 2]);
+        Subunit::firstOrCreate(['name' => 'CHPS', 'unit_id' => $phnPublicHealthNursing->id, 'duration_weeks' => 3]);
 
         $phnMedicalNursing = Unit::firstOrCreate([
             'name' => 'Medical Nursing',
@@ -153,7 +153,7 @@ class DisciplineSeeder extends Seeder
         Subunit::firstOrCreate(['name' => 'OPD', 'unit_id' => $phnMedicalNursing->id, 'duration_weeks' => 1]);
 
         $phnMCH = Unit::firstOrCreate([
-            'name' => 'MCH',
+            'name' => 'surgical',
             'discipline_id' => $publicHealthNurses->id,
             'sort_order' => 3,
         ]);
@@ -176,7 +176,7 @@ class DisciplineSeeder extends Seeder
         Subunit::firstOrCreate(['name' => 'Diabetic', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
         Subunit::firstOrCreate(['name' => ' Hypertensive', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
         Subunit::firstOrCreate(['name' => 'ENT', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
-        Subunit::firstOrCreate(['name' => 'Eye ', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 1]);
+        Subunit::firstOrCreate(['name' => 'Eye ', 'unit_id' => $phnSpecialClinic->id, 'duration_weeks' => 2]);
 
         $phnObstetricNursing = Unit::firstOrCreate([
             'name' => 'Obstetric Nursing',
